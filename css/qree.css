@@ -63,12 +63,12 @@ summary::marker{
 }
 
 svg{ 
-  color: #2EC4B6; 
+  color: #FF9F1C;
   
 }
 
 figure{ 
-  color: #2EC4B6;
+  color: #FF9F1C;
   text-align: center;
 }
 figure:active{
