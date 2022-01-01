@@ -1,0 +1,128 @@
+html, body{
+  background-color: #faf8f7 !important;   
+}
+.bg-light{
+background-color: #faf8f7 !important; 
+}
+.maincolor {
+  color: #ff002b;
+}
+.text-main {
+  color: #ff002b;
+}
+.bg-yellow{
+  background-color: #FF9F1C !important; 
+}
+.text-yellow{
+  color:#FF9F1C;
+}
+.btn-yellow{
+  background-color: #FF9F1C;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50% !important;
+}
+/* ------- Sections ------- */
+
+/* section:target { 
+  display: block !important;
+} */
+
+.smaller{
+  font-size: 0.75em;
+}
+
+#gotop {
+  display: none;
+  position: fixed;
+  bottom: 40px;
+  right: calc(100vw - 90%);
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: #faf8f7; 
+  padding: 0px;
+  color: #000;;
+  cursor: pointer;     
+}
+.sqimg{
+  object-fit: cover;    
+}
+details summary { 
+  cursor: pointer;
+}
+
+details summary > * {
+  display: inline !important;
+}
+summary::-webkit-details-marker{
+  color: #ff002b;
+}
+summary::marker{
+  color: #ff002b;
+}
+
+svg{ 
+  color: #2EC4B6; 
+  
+}
+
+figure{ 
+  color: #2EC4B6;
+  text-align: center;
+}
+figure:active{
+  filter: grayscale(100%);
+}
+figure:focus{
+  filter: grayscale(100%);
+}
+figure:focus-visible{
+  filter: grayscale(100%);
+}
+figure:hover {
+  filter: grayscale(100%);
+}
+
+svg:hover, svg:active, svg:focus-visible{
+  color: #000; 
+  filter: grayscale(100%) !important;
+}
+.menuItems a{
+  text-decoration: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+#detailsHome img{
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+#detailsHome figure{
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+#detailsHome picture{
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+#detailsHome svg{
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+#detailsHome video{
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+
+
+
+
+

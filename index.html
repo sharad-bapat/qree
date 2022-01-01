@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="Latest news & Search Results">
+	<meta name="description" content="Be in the know. Stay up-to-date with stories, events, news and more...">
+	<meta name="author" content="Sharad Bapat">
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">   
+    <!--BootStrap CSS-->
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+    <!--Site CSS-->
+    <link href="css/qree.css" type="text/css" rel="stylesheet" />    
+    <title>Qree - Be in the know</title> 
+</head>
+
+<body>   
+    <div class="container">
+        <nav class="navbar sticky-top navbar-light bg-light" style="max-height: 50px;">
+            <div class="container">
+              <a class="navbar-brand" href="#">
+                
+                <span class="fw-bold" style="font-size: 1.4rem;">Qree</span>
+              </a>
+              <div></div>
+              <div class="float-end" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                  </svg>
+              </div>
+            </div>
+          </nav>
+    </div>
+    <hr class="m-2">
+    <div class="container bg-light collapse mt-1" style="overflow-x: scroll; scrollbar-width: thin;" id="navbarToggleExternalContent"> 
+        <div class="row px-3">
+            <div class="col">
+                <div class="row flex-nowrap menuItems">
+                    <div class="col">
+                        <a href="#topNewsSection">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-newspaper" viewBox="0 0 16 16">
+                                <path
+                                    d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5v-11zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5H12z" />
+                                <path
+                                    d="M2 3h10v2H2V3zm0 3h4v3H2V6zm0 4h4v1H2v-1zm0 2h4v1H2v-1zm5-6h2v1H7V6zm3 0h2v1h-2V6zM7 8h2v1H7V8zm3 0h2v1h-2V8zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Top News</figcaption>
+                        </figure>
+                    </a>
+                    </div> 
+                    <div class="col">
+                        <a href="#trendingNewsSection">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
+                            </svg>                           
+                            <figcaption class="text-dark small mt-0 fw-bold">Trending News</figcaption>
+                        </figure>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#trendingStreamsSection">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                                <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
+                              </svg>                           
+                            <figcaption class="text-dark small mt-0 fw-bold">Trending Streams</figcaption>
+                        </figure>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#LongReadsSection">
+                            <figure>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-file-earmark-post" viewBox="0 0 16 16">
+                                    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+                                    <path d="M4 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-7zm0-3a.5.5 0 0 1 .5-.5H7a.5.5 0 0 1 0 1H4.5a.5.5 0 0 1-.5-.5z"/>
+                                  </svg>
+                                <figcaption class="text-dark small mt-0 fw-bold">Long Reads</figcaption>
+                            </figure>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#wikiSection" aria-current="true">
+                        <figure>
+                            <img src="images/Wikipedia-logo-v2.svg" height="36" width="36" />
+                            <figcaption class="text-dark small mt-0 fw-bold">Trending Wiki</figcaption>
+                        </figure>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="#GoogleSearchTrendsSection" aria-current="true">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                              </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Search Trends</figcaption>
+                        </figure>
+                        </a>
+                    </div>  
+                    <div class="col">
+                        <a href="#TrendingWPSection" aria-current="true">
+                        <figure>
+                            <img src="images/Wordpress-Logo.svg" height="36" width="36" />                            
+                            <figcaption class="text-dark small mt-0 fw-bold">Trending Posts</figcaption>
+                        </figure>
+                        </a>
+                    </div>   
+                    <div class="col">
+                        <a href="#HBDSection" aria-current="true">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-calendar-check bg-main" viewBox="0 0 16 16">
+                                <path
+                                    d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                <path
+                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">HBD Today</figcaption>
+                        </figure>
+                        </a>
+                    </div>  
+                    <div class="col">
+                        <a href="#eventsSection">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-hurricane bg-main" viewBox="0 0 16 16">
+                                <path
+                                    d="M6.999 2.6A5.5 5.5 0 0 1 15 7.5a.5.5 0 0 0 1 0 6.5 6.5 0 1 0-13 0 5 5 0 0 0 6.001 4.9A5.5 5.5 0 0 1 1 7.5a.5.5 0 0 0-1 0 6.5 6.5 0 1 0 13 0 5 5 0 0 0-6.001-4.9zM10 7.5a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Emergency Events</figcaption>
+                        </figure>
+                        </a>
+                    </div>
+                    
+                    <div class="col">
+                        <a href="#googleTrendsSection" aria-current="true">
+                        <figure>
+                            <img src="images/Google_ G _Logo.svg" height="36" width="36" />                            
+                            <figcaption class="text-dark small mt-0 fw-bold">Google Trends</figcaption>
+                        </figure>
+                        </a>
+                    </div>                   
+                   
+                    <div class="col">
+                        <a href="#newsNearMeSection" aria-current="true">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                              </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Nearby News</figcaption>
+                        </figure>
+                    </a>
+                    </div> 
+                    <div class="col">
+                        <a href="#newsImagerySection">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"/>
+                              </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">News Imagery</figcaption>
+                        </figure>
+                        </a>
+                    </div>    
+                    <div class="col">
+                        <a href="#TrendingImagesSection">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"/>
+                              </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Trending Images</figcaption>
+                        </figure>
+                        </a>
+                    </div>       
+                    <div class="col">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-cloud-moon-fill" viewBox="0 0 16 16">
+                                <path d="M11.473 11a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5h-.027z" />
+                                <path
+                                    d="M11.286 1.778a.5.5 0 0 0-.565-.755 4.595 4.595 0 0 0-3.18 5.003 5.46 5.46 0 0 1 1.055.209A3.603 3.603 0 0 1 9.83 2.617a4.593 4.593 0 0 0 4.31 5.744 3.576 3.576 0 0 1-2.241.634c.162.317.295.652.394 1a4.59 4.59 0 0 0 3.624-2.04.5.5 0 0 0-.565-.755 3.593 3.593 0 0 1-4.065-5.422z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Weather</figcaption>
+                        </figure>
+                    </div>
+                    <div class="col">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-youtube" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Videos</figcaption>
+                        </figure>
+                    </div>                  
+                    <div class="col">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-hash bg-main" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.39 12.648a1.32 1.32 0 0 0-.015.18c0 .305.21.508.5.508.266 0 .492-.172.555-.477l.554-2.703h1.204c.421 0 .617-.234.617-.547 0-.312-.188-.53-.617-.53h-.985l.516-2.524h1.265c.43 0 .618-.227.618-.547 0-.313-.188-.524-.618-.524h-1.046l.476-2.304a1.06 1.06 0 0 0 .016-.164.51.51 0 0 0-.516-.516.54.54 0 0 0-.539.43l-.523 2.554H7.617l.477-2.304c.008-.04.015-.118.015-.164a.512.512 0 0 0-.523-.516.539.539 0 0 0-.531.43L6.53 5.484H5.414c-.43 0-.617.22-.617.532 0 .312.187.539.617.539h.906l-.515 2.523H4.609c-.421 0-.609.219-.609.531 0 .313.188.547.61.547h.976l-.516 2.492c-.008.04-.015.125-.015.18 0 .305.21.508.5.508.265 0 .492-.172.554-.477l.555-2.703h2.242l-.515 2.492zm-1-6.109h2.266l-.515 2.563H6.859l.532-2.563z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Hashtags</figcaption>
+                        </figure>
+                    </div>
+                  
+                    <div class="col">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-graph-up bg-main" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z" />
+                            </svg>
+                            <figcaption class="text-dark small mt-0 fw-bold">Stocks</figcaption>
+                        </figure>
+                    </div>
+                  
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container d-flex justify-content-center" style="margin-bottom: 70px !important;">
+        <div class="col">
+            <ul class="list-group list-group-flush mt-1" id="qree" style="max-width:calc(100vw - 10px);">
+            </ul>
+        </div>
+    </div>
+    <!--Footer-->
+    <div class="container fixed-bottom bg-light" style="max-height: 65px;">
+        <div class="row pt-3">
+            <div class="col d-flex justify-content-center">
+                <svg onclick="history.back()" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-left-short  mb-2 mt-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                  </svg>               
+            </div>
+            <div class="col d-flex justify-content-center">
+                <img onclick="window.location='#homeSection'" src="images/favicon-32x32.png" alt="" width="32" height="32" class="d-inline-block align-text-top">                
+            </div>
+            <div class="col d-flex justify-content-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-grid-fill" viewBox="0 0 16 16">
+                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+                  </svg>
+            </div>
+        </div>
+    </div>
+    <!--Container for Go To Top button-->
+    <div class="container" hidden>
+        <a onclick="topFunction()" id="gotop" title="Go to top"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+            fill="currentColor" class="bi bi-arrow-up-square-fill" viewBox="0 0 16 16">
+            <path
+              d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z" />
+          </svg></a>         
+    </div>  
+      <!--All JS Files Starts-->
+  <div hidden>   
+    <!--Jquery-->
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <!--BootStrap-->
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <!--Local Storage JS-->
+    <script type="text/javascript" src="js/localstorage.js"></script>
+    <!--Scrolltop-->
+    <script type="text/javascript" src="js/scrolltop.js"></script>
+     <!--Youtube-->
+     <script type="text/javascript" src="js/bundle.yt.js"></script>
+    <!--Async JS-->
+    <script type="text/javascript" src="js/async.js"></script>  
+    <!--Parse Article JS-->
+    <script type="text/javascript" src="js/mercury.js"></script>   
+    <!--Get Data JS-->
+    <script type="text/javascript" src="js/getData.js"></script>
+    <!--Get Data JS-->
+    <script type="text/javascript" src="js/populate.js"></script>
+    <!--Qree JS-->
+    <script type="text/javascript" src="js/qree.js"></script>
+  
+  </div>
+  <!--All JS Files Ends-->
+</body>
