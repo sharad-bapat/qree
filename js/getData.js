@@ -388,7 +388,7 @@ function getTopNews() {
         try{
             if(!getLocalStorage("TopNews")){
                 urls = [
-                    `https://variety.com/wp-json/wp/v2/posts?per_page=${n}&context=view`
+                    `https://variety.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
                     `https://time.com//wp-json/wp/v2/posts?per_page=${n}&context=view`,
                     `https://thewire.in/wp-json/wp/v2/posts?per_page=${n}&context=view`,
                     `https://www.thestatesman.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
