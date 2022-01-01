@@ -105,8 +105,8 @@ async function getLocation() {
         console.log(`Latitude : ${crd.latitude}`);
         console.log(`Longitude: ${crd.longitude}`);
         console.log(`More or less ${crd.accuracy} meters.`);
-        latitude = crd.latitude;
-        longitude = crd.longitude;       
+        clatitude = crd.latitude;
+        clongitude = crd.longitude;       
     }
     function error(err) {
         console.log(err);;
