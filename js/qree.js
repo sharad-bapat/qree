@@ -1,8 +1,10 @@
-
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const latitude = urlParams.get('latitude');
+const longitude = urlParams.get('longitude');
+console.log(latitude, longitude);
 var country = "";
 var language = ""
-var latitude = ''
-var longitude = ''
 getCountry();
 // getLocation();
 if(country && language){
