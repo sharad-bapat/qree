@@ -42,7 +42,7 @@ background-color: #faf8f7 !important;
   outline: none;
   background-color: #faf8f7; 
   padding: 0px;
-  color: #000;;
+  color: #ff002b;
   cursor: pointer;     
 }
 .sqimg{
@@ -62,13 +62,14 @@ summary::marker{
   color: #ff002b;
 }
 
-svg{ 
-  color: #FF9F1C;
-  
+iframe {
+  height:calc(100vh - 4px);
+  width:calc(100vw - 2px);
+  box-sizing: border-box; 
 }
 
 figure{ 
-  color: #FF9F1C;
+  color: #ff002b;
   text-align: center;
 }
 figure:active{
@@ -119,6 +120,28 @@ svg:hover, svg:active, svg:focus-visible{
   object-fit: cover;
   width: 100%;
   height: auto;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+  width: 10px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #FF9F1C;
+  border-radius: 10px;
+  border: 2px solid #FF9F1C;
+}
+
+::-webkit-scrollbar-track { 
+  background-color: #eee; 
 }
 
 

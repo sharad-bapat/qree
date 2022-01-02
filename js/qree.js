@@ -10,24 +10,24 @@ getCountry();
 if(country && language){
     console.log(`Country:${country}, Language: ${language}`);
 }
-function getCountry(){    
-    country = navigator.languages[0].split("-")[1]  
-    language = navigator.languages[0].split("-")[0] 
+function getCountry(){
+    country = navigator.languages[0].split("-")[1]
+    language = navigator.languages[0].split("-")[0]
 }
 window.addEventListener('hashchange', function () {
     $('#navbarToggleExternalContent').removeClass('show');
     if (!location.hash || location.hash == "#" || location.hash == "") {
-        window.location = "#homeSection";        
+        window.location = "#homeSection";
     }
     console.log(location.hash );
-    load();    
+    load();
 }, false);
 onPageLoad();
 function onPageLoad() {
     if (!location.hash || location.hash == "#" || location.hash == "") {
-        window.location = "#homeSection";        
-    }   
-    load();   
+        window.location = "#homeSection";
+    }
+    load();
 }
 
 function getBGData(){
@@ -36,11 +36,12 @@ function getBGData(){
     getWikiData();
     getGoogleTrends();
     getEvents();
-    getAllTrendingNews();    
+    getAllTrendingNews();
 }
 
 function load(){
-    if (location.hash == "#homeSection") {        
+    if (location.hash == "#homeSection") {
+        loading();
         getHomeTopStories()
             .then(data => {
                 populateHomeTopNews(data);
@@ -48,50 +49,112 @@ function load(){
                     populateHomeTrendingNews(data);
                 })
             });
-    }  
+    }
     if(location.hash=="#wikiSection")  {
+        loading();
         getWikiData().then((data=>{ populateWiki(data)}));
     }
     if(location.hash=="#googleTrendsSection")  {
+        loading();
         getGoogleTrends().then((data=>{ populateGoogleTrends(data)}));
     }
     if(location.hash=="#eventsSection")  {
+        loading();
         getEvents().then((data=>{ populateEvents(data)}));
     }
     if(location.hash=="#GoogleSearchTrendsSection")  {
+        loading();
         getGoogleSearchTrends().then(data=>{ populateGoogleSearchTrends(data)});
     }
-    if(location.hash=="#HBDSection")  {        
+    if(location.hash=="#HBDSection")  {
+        loading();
         getWikiEvents().then(data=>{populateWikiEvents(data)});
-    }  
+    }
     if(location.hash=="#topNewsSection")  {
+        loading();
         getTopNews().then(data=>{populateTopNews(data)});
     }
     if(location.hash=="#trendingNewsSection")  {
+        loading();
         getAllTrendingNews().then(data=>{ populateTrendingNews(data)});
     }
     if(location.hash=="#newsNearMeSection")  {
-        getNearbyNews().then(data=>{populateNearbyNews(data)});
+        loading();
+        if(latitude && longitude){
+            getNearbyNews(latitude,longitude).then(data=>{populateNearbyNews(data)});
+        }else{
+            getNearbyNews().then(data=>{populateNearbyNews(data)});
+        }
+    }
+    if(location.hash=="#trendingLocations")  {
+        loading();
+        getTrendingLocations().then(data=>{console.log(data);populateTrendingLocations(data)});
     }
     if(location.hash=="#TrendingWPSection")  {
         getTrendingPosts().then(data=>{populateTrendingPosts(data)});
     }
     if(location.hash=="#LongReadsSection")  {
+        loading();
         getLongReads().then(data=>{populateLongReads(data)});
     }
     if(location.hash=="#trendingStreamsSection")  {
+        loading();
         getTrendingStreams().then((data=>{ console.log(data);populateStreams(data)}));
-    }    
+    }
     if(location.hash=="#newsImagerySection")  {
+        loading();
+        // populateImagery();
         getNewsImagery().then((data=>{ console.log(data);populateImagery(data)}));
     }
     if(location.hash=="#TrendingImagesSection")  {
+        loading();
         getTrendingImages().then((data=>{ console.log(data);populateTrendingImages(data)}));
     }
-   
-    setInterval(getBGData, 15 * 60000);    
+    if(location.hash=="#WeatherSection")  {
+        loading();
+        if(latitude && longitude){
+            console.log(`"${latitude}, ${longitude}"`);
+            getWeather(`${latitude}, ${longitude}`).then(data=>{console.log(data); populateWeather(data)});
+        }else{
+            getWeather(country).then(data=>{console.log(data)});
+        }
+    }
+    if(location.hash=="#trendingPeople")  {
+        loading();
+        getPeople().then((data=>{ console.log(data);populateTrendingPeople(data)}));
+    }
+    if(location.hash=="#trendingEntities")  {
+        loading();
+        getOrgs().then((data=>{ console.log(data);populateTrendingPeople(data)}));
+    }
+    if(location.hash=="#trendingQuotes")  {
+        loading();
+        getQuotes().then((data=>{console.log(data);populateTrendingQuotes(data)}));
+    }
+    if(location.hash=="#trendingHashtags")  {
+        loading();
+        getTrendingHashtags().then((data=>{console.log(data);populateHashtags(data)}));
+    }
+      if(location.hash=="#trendingAQs")  {
+        loading();
+        getCB().then((data=>{ console.log(data);populateCB(data)}));
+    }
+  
+    
+    // getOrgs().then((data=>{ console.log(data);}));
+    // getQuotes().then((data=>{ console.log(data);}));
+    setInterval(getBGData, 15 * 60000);
 }
 
+function loading(){
+    $("#qree").html("");
+    $("#qree").html(`
+        <div class="d-flex align-items-center">
+            <strong>Loading...</strong>
+            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+    `);    
+}
 
 async function getLocation() {
     var options = {
@@ -99,14 +162,14 @@ async function getLocation() {
         timeout: 5000,
         maximumAge: 0
     };
-    async function success(pos) {       
+    async function success(pos) {
         var crd = pos.coords;
         console.log('Your current position is:');
         console.log(`Latitude : ${crd.latitude}`);
         console.log(`Longitude: ${crd.longitude}`);
         console.log(`More or less ${crd.accuracy} meters.`);
         clatitude = crd.latitude;
-        clongitude = crd.longitude;       
+        clongitude = crd.longitude;
     }
     function error(err) {
         console.log(err);;
@@ -117,7 +180,7 @@ async function getLocation() {
 function getTimeline() {
     urls = ["https://api.gdeltproject.org/api/v2/doc/doc?timespan=1h&query=sourcelang:eng%20(domain:bbc.com%20OR%20domain:cnn.com%20OR%20domain:economictimes.indiatimes.com%20OR%20domain:theguardian.com)&mode=TimelineVolInfo&sort=hybridrel&format=json",
             "https://api.gdeltproject.org/api/v2/doc/doc?timespan=3h&query=sourcelang:eng%20(domain:news18.com%20OR%20domain:theprint.in%20OR%20domain:livemint.com%20OR%20domain:thehindu.com)&mode=TimelineVolInfo&sort=hybridrel&format=json"
-           ]   
+           ]
     async.mapLimit(urls, 1, async function (url) {
         try {
             const response = await fetch(url)
@@ -128,7 +191,7 @@ function getTimeline() {
 
     }, (err, results) => {
         // if (err) { console.log(err); }
-        arr = []        
+        arr = []
         for (index in results) {
             results[index].timeline[0].data.forEach(item => {
                 arr.push({"created": item.date.replace("T","").replace("Z",""), "articles": item.toparts})
@@ -136,37 +199,37 @@ function getTimeline() {
         }
         arrr = arr.sort(function (a, b) {
             return b.created - a.created;
-        });              
+        });
         $("#risingNews").html(``);
-        $.each(arrr, function (k, v) {                       
-            $.each(v.articles,function(k,v){    
+        $.each(arrr, function (k, v) {
+            $.each(v.articles,function(k,v){
                 var { hostname } = new URL(v.url);
                 var $listItem = $(`
                 <li class="list-group-item border-bottom py-4 bg-light mb-1" style="cursor:pointer">
                     <div class="d-flex gap-2 w-100 justify-content-between">
-                        <div>        
+                        <div>
                             <h5 class="mb-0 mt-0 fw-bold">${v.title}</h5>
                             <p class="mb-0 mt-1 opacity-75 small">${hostname}</p>
                         </div>
                         <img src="https://www.google.com/s2/favicons?sz=32&domain=${hostname}" alt="" width="32" height="32" class="rounded-circle flex-shrink-0 mb-1">
-                    </div>  
-                                                                                                         
-                </li>                               
+                    </div>
+
+                </li>
                 `);
                 $listItem.on("click", function (e) {
-                    window.open(v.url, '_blank');                   
+                    window.open(v.url, '_blank');
                 });
                 $("#risingNews").append($listItem);
             })
         });
-        
+
         $("body").css({ "opacity": "1" });
         $("body").css({"cursor": ""});
     })
 }
 // getRSS();
 function getRSSviaFeedly(){
-    const start = Date.now()   
+    const start = Date.now()
     var start_url = `https://feedly.com/v3/feeds/feed%2F`;
     var end_url = `?numRecentEntries=50&ck=1620410511531&ct=feedly.desktop&cv=31.0.1225`;
     var gTopicurl = `https%3A%2F%2Fnews.google.com%2Frss%2Ftopics%2F`;
@@ -174,7 +237,7 @@ function getRSSviaFeedly(){
     // (site:.firstpost.com+OR+site:bloombergquint.com+OR+site:thequint.com)
     // top sites :  (site:.reuters.com+OR+site:npr.org+OR+site:nytimes.com+OR+site:cnn.com+OR+site:foxnews.com+OR+site:apnews.com+OR+site:wsj.com)
     // https://apnews.com/771a653ce572cb67ad60c1343bca1e2f/
-    var param = "";    
+    var param = "";
 		// "https://sbcors.herokuapp.com/https://news.google.com/rss/search?q=(site:india.com+OR+site:business-standard.com+OR+site:livemint.com+OR+site:hindustantimes.com+OR+site:moneycontrol.com+OR+site:indianexpress.com+OR+site:tribuneindia.com+OR+site:hindustantimes.com+OR+site:ndtv.com+OR+site:indiatimes.com+OR+site:thehindu.com+OR+site:news18.com+OR+site:thewire.in)+when:1h&hl=en&gl=IN&ceid=IN:en",
     urls = [
         `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
@@ -186,7 +249,7 @@ function getRSSviaFeedly(){
         `${start_url}${gSearchurl}%28site%3Abusiness-standard.com%2BOR%2Bsite%3Alivemint.com%2BOR%2Bsite%3Ahindustantimes.com%2BOR%2Bsite%3Amoneycontrol.com%2BOR%2Bsite%3Aindianexpress.com%2BOR%2Bsite%3Andtv.com%2BOR%2Bsite%3Aindiatimes.com%2BOR%2Bsite%3Athehindu.com%2BOR%2Bsite%3Anews18.com%2BOR%2Bsite%3Athewire.in%29%2Bwhen%3A6h${end_url}`
     ]
     async.mapLimit(urls, 5, async function (url) {
-        try {			
+        try {
             const response = await fetch(url)
             return response.json()
         } catch (err) {
@@ -195,13 +258,13 @@ function getRSSviaFeedly(){
         }
 
     }, (err, results) => {
-		const stop = Date.now()        
-        if (err) {console.log(err);}               
+		const stop = Date.now()
+        if (err) {console.log(err);}
 		else{
 			// rss = {}
 			// for (index in results) {
 			// 	if (index == 0) {
-			// 		arr = []                
+			// 		arr = []
 			// 		results[index].items.forEach(item => {
 			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
 			// 		})
@@ -210,53 +273,53 @@ function getRSSviaFeedly(){
 			// 		});
 			// 		rss.india = arrr;
 			// 	}else if (index == 1){
-			// 		arr = []                
+			// 		arr = []
 			// 		results[index].items.forEach(item => {
 			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
 			// 		})
 			// 		arrr = arr.sort(function (a, b) {
 			// 			return b.created - a.created;
 			// 		});
-			// 		rss.hindi = arrr;	
+			// 		rss.hindi = arrr;
 			// 	}
 			// 	else if (index == 2){
-			// 		arr = []                
+			// 		arr = []
 			// 		results[index].items.forEach(item => {
 			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
 			// 		})
 			// 		arrr = arr.sort(function (a, b) {
 			// 			return b.created - a.created;
 			// 		});
-			// 		rss.entertainment = arrr;	
-			// 	}				
-			// 	else if (index == 3){
-			// 		arr = []                
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.business = arrr;	
+			// 		rss.entertainment = arrr;
 			// 	}
-			// }			
+			// 	else if (index == 3){
+			// 		arr = []
+			// 		results[index].items.forEach(item => {
+			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
+			// 		})
+			// 		arrr = arr.sort(function (a, b) {
+			// 			return b.created - a.created;
+			// 		});
+			// 		rss.business = arrr;
+			// 	}
+			// }
 			const stop = Date.now()
 			console.log(`Time Taken to execute RSS News = ${(stop - start) / 1000} seconds`);
-            console.log(results);           
+            console.log(results);
             setLocalStorage("rss", results, 60 * 60000);
             $("body").css({ "opacity": "1" });
             $("body").css({"cursor": ""});
-			
+
 		};
     })
 }
 
 function getRSS(){
-    const start = Date.now()   
+    const start = Date.now()
       urls = [
         // `https://api-panda.com/v4/articles/rss?feedId=61cda14cc7fc328dd9bf0e43`,
         // `https://api-panda.com/v4/articles/rss?feedId=61cda34bc7fc3277dabf1a9c`
-        `` 
+        ``
         `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
         `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGRqTVhZU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
         `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNREpxYW5RU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
@@ -265,7 +328,7 @@ function getRSS(){
         `${start_url}${gSearchurl}%28site%3Abusiness-standard.com%2BOR%2Bsite%3Alivemint.com%2BOR%2Bsite%3Ahindustantimes.com%2BOR%2Bsite%3Amoneycontrol.com%2BOR%2Bsite%3Aindianexpress.com%2BOR%2Bsite%3Andtv.com%2BOR%2Bsite%3Aindiatimes.com%2BOR%2Bsite%3Athehindu.com%2BOR%2Bsite%3Anews18.com%2BOR%2Bsite%3Athewire.in%29%2Bwhen%3A6h${end_url}`
     ]
     async.mapLimit(urls, 5, async function (url) {
-        try {			
+        try {
             const response = await fetch(url)
             return response.json()
         } catch (err) {
@@ -274,13 +337,13 @@ function getRSS(){
         }
 
     }, (err, results) => {
-		const stop = Date.now()        
-        if (err) {console.log(err);}               
+		const stop = Date.now()
+        if (err) {console.log(err);}
 		else{
 			// rss = {}
 			// for (index in results) {
 			// 	if (index == 0) {
-			// 		arr = []                
+			// 		arr = []
 			// 		results[index].items.forEach(item => {
 			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
 			// 		})
@@ -289,49 +352,49 @@ function getRSS(){
 			// 		});
 			// 		rss.india = arrr;
 			// 	}else if (index == 1){
-			// 		arr = []                
+			// 		arr = []
 			// 		results[index].items.forEach(item => {
 			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
 			// 		})
 			// 		arrr = arr.sort(function (a, b) {
 			// 			return b.created - a.created;
 			// 		});
-			// 		rss.hindi = arrr;	
+			// 		rss.hindi = arrr;
 			// 	}
 			// 	else if (index == 2){
-			// 		arr = []                
+			// 		arr = []
 			// 		results[index].items.forEach(item => {
 			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
 			// 		})
 			// 		arrr = arr.sort(function (a, b) {
 			// 			return b.created - a.created;
 			// 		});
-			// 		rss.entertainment = arrr;	
-			// 	}				
-			// 	else if (index == 3){
-			// 		arr = []                
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.business = arrr;	
+			// 		rss.entertainment = arrr;
 			// 	}
-			// }			
+			// 	else if (index == 3){
+			// 		arr = []
+			// 		results[index].items.forEach(item => {
+			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
+			// 		})
+			// 		arrr = arr.sort(function (a, b) {
+			// 			return b.created - a.created;
+			// 		});
+			// 		rss.business = arrr;
+			// 	}
+			// }
 			const stop = Date.now()
 			console.log(`Time Taken to execute RSS News = ${(stop - start) / 1000} seconds`);
-            console.log(results);           
+            console.log(results);
             setLocalStorage("rss", results, 60 * 60000);
             $("body").css({ "opacity": "1" });
             $("body").css({"cursor": ""});
-			
+
 		};
     })
 }
 
 function imgError(image) {
-    $(image).hide(); 
+    $(image).hide();
  }
 
  function getArticleExtract(url) {
@@ -340,21 +403,21 @@ function imgError(image) {
         (next) => {
             Parse(`${url}`).then(data => {
                 if (data.title) {
-                    console.clear()           
+                    console.clear()
                     $("#wpContent").append(`<h1>${data.title}</h1>`);
                     $("#wpContent").append(`<h2>${data.date_published}</h2>`);
                     $("#wpContent").append(`<img src ="${data.lead_image_url} alt="" width='100%' height="auto" style="object-fit:cover" onerror='imgError(this)'/>`);
                     $("#wpContent").append(`<p class="small">${data.content}<p>`);
                     $("#wpContent").append(`<p class="small d-flex-justify-content-center">Via: Normal Parse/<p>`);
-                } else {     
-                    console.log(`Simple parsing did not work`);     
+                } else {
+                    console.log(`Simple parsing did not work`);
                     return next(new Error('Cannot get Data'))
                 }
-            }).catch(err => { 
-                console.log(err); 
-                return next(new Error('Cannot get Data')) 
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
             })
-        },  
+        },
         (next) => {
             fetchURL(`https://api.outline.com/v3/parse_article?source_url=${url}`).then(data => {
                 if (data.success) {
@@ -386,7 +449,7 @@ function imgError(image) {
             })
         },
         (next) => {
-            fetchURL(`https://api-panda.com/v2/feeds/story/full?url=${url}`).then(data => { 
+            fetchURL(`https://api-panda.com/v2/feeds/story/full?url=${url}`).then(data => {
                 if (data.success) {
                     console.clear()
                     data =  data.data;
@@ -398,7 +461,7 @@ function imgError(image) {
                     let author = data.data.author ? data.data.author : ``;
                     let authorUrl = data.data.authorUrl ? data.data.authorUrl : ``;
                     let siteName = data.data.siteName ? data.data.siteName : ``;
-                    let date = data.data.date ? new Date(data.data.date).toLocaleString("en-GB") : ``;                   
+                    let date = data.data.date ? new Date(data.data.date).toLocaleString("en-GB") : ``;
                     $("#wpContent").append(`<h1>${title}</h1>`);
                     $("#wpContent").append(`<h2>${date}</h2>`);
                     $("#wpContent").append(`<p class="small">${content}<p>`);
@@ -407,42 +470,42 @@ function imgError(image) {
                     console.log(`Pandas did not work`);
                     return next(new Error('Cannot get Data'))
                 }
-            }).catch(err => { 
-                console.log(err); 
-                return next(new Error('Cannot get Data')) 
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
             })
-        },       
-        
+        },
+
         (next) => {
-            Parse(`https://sbcors.herokuapp.com/${url}`).then(data => {                
-                if (data.title) {   
-                    console.clear()           
+            Parse(`https://sbcors.herokuapp.com/${url}`).then(data => {
+                if (data.title) {
+                    console.clear()
                     $("#wpContent").append(`<h1>${data.title}</h1>`);
                     $("#wpContent").append(`<h2>${data.date_published}</h2>`);
                     $("#wpContent").append(`<img src ="${data.lead_image_url} alt="" width='100%' height="auto" style="object-fit:cover" onerror='imgError(this)'/>`);
                     $("#wpContent").append(`<p class="small">${data.content}<p>`);
                     $("#wpContent").append(`<p class="small d-flex-justify-content-center">Via: Proxy server/<p>`);
-                } else { 
-                    console.log(`CORS did not work`);                           
+                } else {
+                    console.log(`CORS did not work`);
                     return next(new Error('Cannot get Data'))
                 }
-            }).catch(err => { 
-                console.log(err); 
-                return next(new Error('Cannot get Data')) 
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
             })
-        },           
+        },
         (next) => {
             fetchURL(`https://txtify.it/${url}`).then(data => {
                 if (data.success) {
-                    
+
                 } else {
                     console.clear()
                     $("#wpContent").append(data.response);
                     $("#wpContent").append(`<p class="small d-flex-justify-content-center">Via: txtify.it/<p>`);
                 }
-            }).catch(err => { 
-                console.log(err); 
-                return next(new Error('Cannot get Data')) 
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
             })
         },
     ])
@@ -471,7 +534,7 @@ async function fetchURL(url) {
 // urlTest("https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP")
 // TestGroupBy("https://sbcors.herokuapp.com/https://rsoe-edis.org/gateway/webapi/events/")
 async function urlTest(url){
-    try{       
+    try{
         const response =  await fetch(url);
         console.log(await response.json())
     }catch(err){
@@ -480,7 +543,7 @@ async function urlTest(url){
    }
 
 async function TestGroupBy(url){
-    try{       
+    try{
         const response =  await fetch(url);
         const data = await response.json();
         console.log(groupBy(data.features, (c) => c.properties.categoryName));
@@ -493,18 +556,3 @@ async function TestGroupBy(url){
 function groupBy(xs, f) {
     return xs.reduce((r, v, i, a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {});
   }
-
-  
-
-
-
-
-
- 
-
-   
-
-
-
-
-

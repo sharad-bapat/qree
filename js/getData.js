@@ -13,7 +13,7 @@ function normalizeRedditData(results){
                         "created": item.data.created,
                         "link": item.data.url,
                         "source": item.data.domain,
-                        "thumbnail": item.data.thumbnail,                        
+                        "thumbnail": item.data.thumbnail,
                     })
                 }
             }
@@ -21,7 +21,7 @@ function normalizeRedditData(results){
     }
     arrr = arr.sort(function (a, b) {
         return b.created - a.created;
-    }); 
+    });
     return arrr;
 }
 
@@ -40,7 +40,7 @@ function getHomeTrendingNews() {
 
 function normalizeGDELT(results){
     arr = []
-    for (index in results) {        
+    for (index in results) {
         if (results[index].articles) {
             results[index].articles.forEach(item => {
                 var item_index = arr.findIndex(x => x.link == item.url);
@@ -75,12 +75,12 @@ function getHomeTopStories(){
                         "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:timesofindia.indiatimes.com",
                         "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:thehindu.com",
                         ]
-                async.mapLimit(urls, 11, async function(url){try{const response = await fetch(url);return response.json()}catch (err) {return {}}}, (err, results) => { response = normalizeGDELT(results); setLocalStorage("HomeTopStories",response, 15 * 60000);resolve(response)})       
+                async.mapLimit(urls, 11, async function(url){try{const response = await fetch(url);return response.json()}catch (err) {return {}}}, (err, results) => { response = normalizeGDELT(results); setLocalStorage("HomeTopStories",response, 15 * 60000);resolve(response)})
             }else{
                 resolve(getLocalStorage("HomeTopStories"));
             }
-        }catch(err){reject(err)}        
-    })    
+        }catch(err){reject(err)}
+    })
 }
 function getWikiData() {
     return new Promise((resolve, reject) => {
@@ -98,7 +98,7 @@ function getWikiData() {
                         const response = await fetch(url)
                         return response.json()
                     } catch (err) {
-                        return {}    
+                        return {}
                     }
 
                 }, (err, results) => {
@@ -141,7 +141,7 @@ function getWikiData() {
                             "description": results[0].tfa.description.text,
                             "link":results[0].tfa.content_urls.desktop.page,
                         }
-                        setLocalStorage("WikiData", wiki, 15 * 60000);                        
+                        setLocalStorage("WikiData", wiki, 15 * 60000);
                         resolve(wiki)
                     }
 
@@ -161,14 +161,14 @@ function skeleton(){
             }else{
                 resolve(getLocalStorage(""));
             }
-        }catch(err){reject(err)}        
-    })   
+        }catch(err){reject(err)}
+    })
 }
 function getGoogleTrends(){
     return new Promise((resolve, reject)=>{
         try{
             if(!getLocalStorage("GoogleTrends")){
-                const start = Date.now()  
+                const start = Date.now()
                 var param= ""  ;
                 if(country && language){
                     param = `hl=${language}-${country}&tz=0&fi=0&fs=0&geo=${country}&ri=300&rs=20&sort=0`
@@ -197,34 +197,34 @@ function getGoogleTrends(){
                     } catch (err) {
                         return "{)]}'}"
                     }
-            
+
                 }, (err, results) => {
-                    if (err) {console.log(err);} 
+                    if (err) {console.log(err);}
                     else{
                         // all = [];
                         arr = [];
                         articles = []
                         for(index in results){
                             try{
-                                if(results[index]){	
+                                if(results[index]){
                                     response = JSON.parse(results[index].replace(")]}'", ""));
                                     response.storySummaries.trendingStories.forEach(item => {arr.push(item)});
-                                }	
+                                }
                             }catch (err){
                                 console.trace(err);
-                            }							
-                        }	
+                            }
+                        }
                         response = 	arr.filter((v,i,a)=>a.findIndex(t=>(t.title === v.title))===i)
-                        setLocalStorage("GoogleTrends",response , 60 * 60000); 
+                        setLocalStorage("GoogleTrends",response , 60 * 60000);
                         resolve(response);
-                    }; 
+                    };
                 })
 
             }else{
                 resolve(getLocalStorage("GoogleTrends"));
             }
-        }catch(err){reject(err)}        
-    })  
+        }catch(err){reject(err)}
+    })
 }
 function getGoogleSearchTrends(){
     return new Promise((resolve, reject)=>{
@@ -255,8 +255,8 @@ function getGoogleSearchTrends(){
             } else {
                 resolve(getLocalStorage("GoogleSearchTrends"));
             }
-        }catch(err){reject(err)}        
-    })   
+        }catch(err){reject(err)}
+    })
 }
 
 function groupBy(xs, f) {
@@ -266,35 +266,28 @@ function groupBy(xs, f) {
 function getEvents(){
     return new Promise((resolve, reject)=>{
         try{
-            if(!getLocalStorage("EventsData")){
-                urls = ["https://sbcors.herokuapp.com/https://rsoe-edis.org/gateway/webapi/events/"]
+            urls = ["https://sbcors.herokuapp.com/https://rsoe-edis.org/gateway/webapi/events/"]
                 async.map(urls, async function (url) {
                     try {
                         const response = await fetch(url)
                         return response.json()
                     } catch (err) {
                         return {}
-                    }            
-                }, (err, results) => {                   
-                    var arr = groupBy(results[0].features, (c) => c.properties.categoryName) 
-                    setLocalStorage("EventsData", "", 60 * 60000);
-                    setLocalStorage("EventsData", JSON.stringify(arr), 60 * 60000);
+                    }
+                }, (err, results) => {
+                    var arr = groupBy(results[0].features, (c) => c.properties.categoryName)
                     resolve(arr);
-                })    
-
-            }else{
-                resolve(getLocalStorage("EventsData"));
-            }
-        }catch(err){reject(err)}        
-    })   
+                })
+        }catch(err){reject(err)}
+    })
 }
 
 function getWikiEvents(){
-    return new Promise((resolve, reject)=>{      
-        var MyDate = new Date();       
+    return new Promise((resolve, reject)=>{
+        var MyDate = new Date();
         month = ('0' + (MyDate.getMonth() + 1)).slice(-2);
         day = ('0' + (MyDate.getDate())).slice(-2);
-        try{           
+        try{
                 urls = [`https://en.wikipedia.org/api/rest_v1/feed/onthisday/holidays/${month}/${day}`,
                 `https://en.wikipedia.org/api/rest_v1/feed/onthisday/births/${month}/${day}`,
                 `https://en.wikipedia.org/api/rest_v1/feed/onthisday/deaths/${month}/${day}`,
@@ -368,111 +361,106 @@ function getWikiEvents(){
                                 })
                             });
                             arr.push({
-                                title: j.text,                                
+                                title: j.text,
                                 pages: pages
                             });
                         })
                         WikiEvents.holidays = arr;
                         arr=[];
                     }
-                }) 
+                })
                 resolve(WikiEvents);
-            })            
-        }catch(err){reject(err)}        
-    })   
+            })
+        }catch(err){reject(err)}
+    })
 }
 
 function getTopNews() {
-    var n = 2;
+    var n = 5;
     return new Promise((resolve, reject)=>{
         try{
-            if(!getLocalStorage("TopNews")){
-                urls = [
-                    `https://variety.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://time.com//wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://thewire.in/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://www.thestatesman.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://www.hollywoodreporter.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://deadline.com//wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://techcrunch.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://observer.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://metro.co.uk/wp-json/wp/v2/posts?per_page=${n}&context=view`,
-                    `https://thesun.co.uk/wp-json/wp/v2/posts?per_page=${n}&context=view`,                    
-                    // "https://www.siasat.com/wp-json/wp/v2/posts?per_page=5&context=view",
-                    `https://public-api.wordpress.com/rest/v1.2/sites/197693856/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/26599698/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/198147347/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/190074382/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/176892389/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/126020344/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/136451602/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/177646860/posts/?&number=${n}`,
-                    `https://public-api.wordpress.com/rest/v1.2/sites/189127649/posts/?&number=${n}`,
-                ]
-                async.map(urls, async function (url) {
-                    try {
-                        const response = await fetch(url)
-                        return response.json()
-                    } catch (err) {
-                        return {}
-                    }
-            
-                }, (err, results) => {
-                    if (err) { console.log(err); } else {
-                        arr = [];
-                        for (index in results) {
-                            if (index < 10) {
-                                results[index].forEach(item => {
-                                    arr.push({
-                                        "title": item.title.rendered,
-                                        "date": `${new Date(item.date.toString()).toLocaleString()}`,
-                                        "link": item.link,
-                                        "content": item.content.rendered,
-                                        "excerpt": item.excerpt.rendered,
-                                        "media": item.jetpack_featured_media_url,
-                                        "created": Date.parse(item.date),                                        
-                                    })
-            
-                                });
-            
-                            } else {
-                                results[index].posts.forEach(item => {
-                                    arr.push({
-                                        "title": item.title,
-                                        "date": `${new Date(item.date.toString()).toLocaleString()}`,
-                                        "link": item.URL,
-                                        "content": item.content,
-                                        "excerpt": item.excerpt,
-                                        "media": item.featured_image,
-                                        "created": Date.parse(item.date)
-                                    })
-                                });
-            
-                            }
-            
+            urls = [
+                `https://variety.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                `https://time.com//wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                // `https://thewire.in/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                // `https://www.thestatesman.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                `https://www.hollywoodreporter.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                `https://deadline.com//wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                `https://techcrunch.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                `https://observer.com/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                `https://metro.co.uk/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                // `https://thesun.co.uk/wp-json/wp/v2/posts?per_page=${n}&context=view`,
+                // "https://www.siasat.com/wp-json/wp/v2/posts?per_page=5&context=view",
+                `https://public-api.wordpress.com/rest/v1.2/sites/197693856/posts/?&number=${n}`,
+                // `https://public-api.wordpress.com/rest/v1.2/sites/26599698/posts/?&number=${n}`,
+                `https://public-api.wordpress.com/rest/v1.2/sites/198147347/posts/?&number=${n}`,
+                `https://public-api.wordpress.com/rest/v1.2/sites/190074382/posts/?&number=${n}`,
+                `https://public-api.wordpress.com/rest/v1.2/sites/176892389/posts/?&number=${n}`,
+                `https://public-api.wordpress.com/rest/v1.2/sites/126020344/posts/?&number=${n}`,
+                // `https://public-api.wordpress.com/rest/v1.2/sites/136451602/posts/?&number=${n}`,
+                `https://public-api.wordpress.com/rest/v1.2/sites/177646860/posts/?&number=${n}`,
+                `https://public-api.wordpress.com/rest/v1.2/sites/189127649/posts/?&number=${n}`,
+            ]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+
+            }, (err, results) => {
+                if (err) { console.log(err); } else {
+                    arr = [];
+                    for (index in results) {
+                        if (index < 7) {
+                            results[index].forEach(item => {
+                                arr.push({
+                                    "title": item.title.rendered,
+                                    "date": `${new Date(item.date.toString()).toLocaleString()}`,
+                                    "link": item.link,
+                                    "content": item.content.rendered,
+                                    "excerpt": item.excerpt.rendered,
+                                    "media": item.jetpack_featured_media_url,
+                                    "created": Date.parse(item.date),
+                                })
+
+                            });
+
+                        } else {
+                            results[index].posts.forEach(item => {
+                                arr.push({
+                                    "title": item.title,
+                                    "date": `${new Date(item.date.toString()).toLocaleString()}`,
+                                    "link": item.URL,
+                                    "content": item.content,
+                                    "excerpt": item.excerpt,
+                                    "media": item.featured_image,
+                                    "created": Date.parse(item.date)
+                                })
+                            });
+
                         }
-                        arrr = arr.sort(function (a, b) {
-                            return b.created - a.created;
-                        });            
-                        setLocalStorage("TopNews", arrr, 60 * 60000);                       
-                        resolve(getLocalStorage(arrr));
+
                     }
-            
-                })
-            }else{
-                resolve(getLocalStorage("TopNews"));
-            }
-        }catch(err){reject(err)}        
-    })   
-  
-   
+                    arrr = arr.sort(function (a, b) {
+                        return b.created - a.created;
+                    });                   
+                    resolve(arrr);
+                }
+
+            })
+        }catch(err){reject(err)}
+    })
+
+
 }
 
 function getAllTrendingNews(){
     return new Promise((resolve, reject)=>{
         try{
             if(!getLocalStorage("AllTrendingNews")){
-                
+
             urls = ["https://www.reddit.com/r/worldnews/top/.json?sort=top&t=hour&limit=10",
                 "https://www.reddit.com/r/worldnews/top/.json?sort=top&t=day&limit=10",
                 "https://www.reddit.com/r/worldnews/hot/.json?&limit=10",
@@ -501,22 +489,22 @@ function getAllTrendingNews(){
             }else{
                 resolve(getLocalStorage("AllTrendingNews"));
             }
-        }catch(err){reject(err)}        
-    })   
+        }catch(err){reject(err)}
+    })
 }
 
 function getNearbyNews(latitude, longitude){
     return new Promise((resolve, reject)=>{
         var c=""
         try {
-            if(latitude&&longitude){
-                urls = [`https://api.gdeltproject.org/api/v2/geo/geo?query=near:${latitude},${longitude},50%20sourcelang:eng&format=JSONFeed&MAXPOINTS=10`]
+            if(latitude && longitude){
+                urls = [`https://api.gdeltproject.org/api/v2/geo/geo?query=near:${latitude},${longitude},50%20sourcelang:eng&format=JSONFeed&TIMESPAN=2h`]
             }else{
                 if(country=="GB"){
                     c="%20sourcecountry:UK"
                 }
-                urls = [`https://api.gdeltproject.org/api/v2/geo/geo?query=%20sourcelang:eng${c}&format=JSONFeed&MAXPOINTS=10`]
-            }            
+                urls = [`https://api.gdeltproject.org/api/v2/geo/geo?query=%20sourcelang:eng${c}&format=JSONFeed&TIMESPAN=2h`]
+            }
             async.mapLimit(urls, 3, async function (url) {
                 try {
                     const response = await fetch(url)
@@ -526,113 +514,97 @@ function getNearbyNews(latitude, longitude){
                 }
             }, (err, results) => {
                 resolve (results[0])
-            })           
+            })
         } catch (err) {
             reject(err);
-        }     
+        }
     })
 }
 
 function getTrendingPosts() {
+    var n =2
     return new Promise((resolve, reject) => {
-        if(!getLocalStorage("TrendingPosts")){
-            try {
-                urls = ["https://public-api.wordpress.com/rest/v1/read/tags/art/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/photography/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/travel/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/blogging/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/postaday/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/life/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/books/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/entertainment/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/business/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/humor/posts?number=1&http_envelope=1",
-                    "https://public-api.wordpress.com/rest/v1/read/tags/technology/posts?number=1&http_envelope=1",
-                ]
-                async.mapLimit(urls, 11, async function (url) {
-                    try {
-                        const response = await fetch(url);
-                        return response.json()
-                    } catch (err) {
-                        return {}
-                    }
-                }, (err, results) => {
-                    var arr=[]
-                    $.each(results, function(k,data){
-                        if(data.code==200){
-                            if(data.body.posts.length>0){
-                                $.each(data.body.posts, function (k, item) {
-                                    arr.push({
-                                        "hostname":new URL(item.URL).hostname,
-                                        "date": new Date(item.date.toString()).toLocaleString(),
-                                        "title": item.title,
-                                        "excerpt": item.excerpt,
-                                        "content": item.content,
-                                        "image": item.featured_media.uri
-                                    });                                
+        try {
+            urls = [
+                `https://public-api.wordpress.com/rest/v1/read/tags/art/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/photography/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/travel/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/blogging/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/postaday/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/life/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/books/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/entertainment/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/business/posts?number=${n}&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/humor/posts?number=1&http_envelope=1`,
+                `https://public-api.wordpress.com/rest/v1/read/tags/technology/posts?number=${n}&http_envelope=1`,
+            ]
+            async.mapLimit(urls, 11, async function (url) {
+                try {
+                    const response = await fetch(url);
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {
+                var arr=[]
+                $.each(results, function(k,data){
+                    if(data.code==200){
+                        if(data.body.posts.length>0){
+                            $.each(data.body.posts, function (k, item) {
+                                arr.push({
+                                    "hostname":new URL(item.URL).hostname,
+                                    "date": new Date(item.date.toString()).toLocaleString(),
+                                    "title": item.title,
+                                    "excerpt": item.excerpt,
+                                    "content": item.content,
+                                    "image": item.featured_media.uri
                                 });
-                            } 
+                            });
                         }
-                    });
-                    setLocalStorage("TrendingPosts", arr, 60 * 60000);
-                    resolve(arr)
-                })
-    
-            } catch (err) { reject(err) }
-        }
-        else{
-            resolve(getLocalStorage("TrendingPosts"));
-        }
+                    }
+                });                
+                resolve(arr)
+            })
 
-        
-
+        } catch (err) { reject(err) }
     })
 }
 
 function getLongReads() {
     return new Promise((resolve, reject) => {
-        if(!getLocalStorage("LongReads")){
-            try {
-                urls = [                    
-                    "https://public-api.wordpress.com/rest/v1/read/tags/long-reads/posts?number=20&http_envelope=1",                   
-                ]
-                async.mapLimit(urls, 11, async function (url) {
-                    try {
-                        const response = await fetch(url);
-                        return response.json()
-                    } catch (err) {
-                        return {}
-                    }
-                }, (err, results) => {
-                    var arr=[]
-                    $.each(results, function(k,data){
-                        if(data.code==200){
-                            if(data.body.posts.length>0){
-                                $.each(data.body.posts, function (k, item) {
-                                    arr.push({
-                                        "hostname":new URL(item.URL).hostname,
-                                        "date": new Date(item.date.toString()).toLocaleString(),
-                                        "title": item.title,
-                                        "excerpt": item.excerpt,
-                                        "content": item.content,
-                                        "image": item.featured_media.uri
-                                    });                                
+        try {
+            urls = [
+                "https://public-api.wordpress.com/rest/v1/read/tags/long-reads/posts?number=20&http_envelope=1",
+            ]
+            async.mapLimit(urls, 11, async function (url) {
+                try {
+                    const response = await fetch(url);
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {
+                var arr=[]
+                $.each(results, function(k,data){
+                    if(data.code==200){
+                        if(data.body.posts.length>0){
+                            $.each(data.body.posts, function (k, item) {
+                                arr.push({
+                                    "hostname":new URL(item.URL).hostname,
+                                    "date": new Date(item.date.toString()).toLocaleString(),
+                                    "title": item.title,
+                                    "excerpt": item.excerpt,
+                                    "content": item.content,
+                                    "image": item.featured_media.uri
                                 });
-                            } 
+                            });
                         }
-                    });
-                    setLocalStorage("LongReads", arr, 60 * 60000);
-                    resolve(arr)
-                })
-    
-            } catch (err) { reject(err) }
-        }
-        else{
-            resolve(getLocalStorage("LongReads"));
-        }
+                    }
+                });               
+                resolve(arr)
+            })
 
-        
-
+        } catch (err) { reject(err) }
     })
 }
 
@@ -640,7 +612,7 @@ function getTrendingStreams(){
     return new Promise((resolve, reject) => {
         if(!getLocalStorage("TrendingStreams")){
             try {
-                urls = [                    
+                urls = [
                     "https://api.reelgood.com/v3.0/content/browse/curated/trending-picks?availability=onAnySource&content_kind=both&hide_seen=false&hide_tracked=false&hide_watchlisted=false&imdb_end=10&imdb_start=0&rg_end=100&rg_start=0&skip=0&sort=0&take=50&year_start=1900",
                     "https://api.reelgood.com/v3.0/content/browse/curated/popular-movies?availability=onAnySource&content_kind=both&hide_seen=false&hide_tracked=false&hide_watchlisted=false&imdb_end=10&imdb_start=0&rg_end=100&rg_start=0&skip=0&sort=0&take=50&year_start=1900",                ]
                 async.mapLimit(urls, 2, async function (url) {
@@ -658,15 +630,12 @@ function getTrendingStreams(){
                     setLocalStorage("TrendingStreams", arr, 4 * 60 * 60000);
                     resolve(arr)
                 })
-    
+
             } catch (err) { reject(err) }
         }
         else{
             resolve(getLocalStorage("TrendingStreams"));
         }
-
-        
-
     })
 }
 
@@ -674,7 +643,7 @@ function getNewsImagery(){
     return new Promise((resolve, reject) => {
         var c=""
         try {
-           urls=["https://api.gdeltproject.org/api/v2/doc/doc?query=ImageWebCount%3E5&mode=ImageCollageInfo&timespan=1h&sort=DateDesc&format=json"]          
+           urls=["https://api.gdeltproject.org/api/v2/doc/doc?query=ImageWebCount%3E10%20sourcelang:eng&mode=ImageCollageInfo&sort=DateDesc&format=json"]
             async.mapLimit(urls, 1, async function (url) {
                 try {
                     const response = await fetch(url)
@@ -687,10 +656,10 @@ function getNewsImagery(){
                     return b.imagewebcount - a.imagewebcount;
                 });
                 resolve (arrr)
-            })           
+            })
         } catch (err) {
             reject(err);
-        }     
+        }
     })
 }
 
@@ -706,9 +675,9 @@ function normalizeRedditImageData(results){
                         "created": item.data.created,
                         "link": item.data.url,
                         "source": item.data.domain,
-                        "thumbnail": item.data.thumbnail, 
-                         "author":item.data.author, 
-                        
+                        "thumbnail": item.data.thumbnail,
+                         "author":item.data.author,
+
                     })
                 }else{
                     arr.push({
@@ -717,17 +686,17 @@ function normalizeRedditImageData(results){
                         "link": item.data.url,
                         "source": item.data.domain,
                         "thumbnail": item.data.url_overridden_by_dest,
-                        "author":item.data.author, 
-                                                
+                        "author":item.data.author,
+
                     })
                 }
-                
+
             }
         });
     }
     arrr = arr.sort(function (a, b) {
         return b.created - a.created;
-    }); 
+    });
     return arrr;
 }
 
@@ -735,11 +704,11 @@ function getTrendingImages(){
     return new Promise((resolve, reject)=>{
         try{
             if(!getLocalStorage("TrendingImages")){
-                
+
             urls = ["https://www.reddit.com/r/pics/top/.json?sort=top&t=day&limit=10",
-                "https://www.reddit.com/r/OldPhotosInRealLife/top/.json?sort=top&t=day&limit=10",                
+                "https://www.reddit.com/r/OldPhotosInRealLife/top/.json?sort=top&t=day&limit=10",
                 "https://www.reddit.com/r/wildlifephotography/top/.json?sort=top&t=day&limit=10",
-                "https://www.reddit.com/r/streetphotography/top/.json?sort=top&t=day&limit=10",              
+                "https://www.reddit.com/r/streetphotography/top/.json?sort=top&t=day&limit=10",
             ]
             async.mapLimit(urls, 5, async function (url) {
                 try {
@@ -757,8 +726,8 @@ function getTrendingImages(){
             }else{
                 resolve(getLocalStorage("TrendingImages"));
             }
-        }catch(err){reject(err)}        
-    })   
+        }catch(err){reject(err)}
+    })
 }
 
 function getWPORGFeaturedMediaURL(id){
@@ -776,9 +745,299 @@ function getWPORGFeaturedMediaURL(id){
                 response = results[0].source_url;
                 resolve(response)
             })
-        }catch(err){reject(err)}        
-    })  
-    
+        }catch(err){reject(err)}
+    })
+
 }
 
 
+function getWeather(latitude,longitude){
+    return new Promise((resolve, reject)=>{
+        try{ 
+            DDG_Forecast(latitude,longitude).then((data=>resolve(data)));                 
+        }catch(err){reject(err)}
+    })
+}
+
+function getTrendingLocations(){
+    return new Promise((resolve, reject)=>{
+        try{
+            urls = ["https://api.gdeltproject.org/api/v2/geo/geo?query=-sourcecountry:US%20sourcelang:eng&format=JSONfeed&TIMESPAN=6h"]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {
+                var arr = groupBy(results[0].items, (c) => c.title.split(":")[0].split(",")[0]);
+                var arrr= []
+                for (const [ key, value ] of Object.entries(arr)) {
+                    arrr.push({length:value.length,location:key,items:value})
+                }
+                arrr = arrr.sort(function (a, b) {
+                    return b.length - a.length;
+                });
+                resolve(arrr.slice(0,50));
+            })
+           
+        }catch(err){reject(err)}
+    })
+}
+
+function getPeople(){
+    return new Promise((resolve, reject)=>{
+        try{
+            urls = [
+                    "https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap&?stories=events&language=en",
+                    "https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap&?stories=top&language=en",
+                ]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {              
+                var arr=[]                 
+                $.each(results, function(i,j){
+                    $.each(j.items, function (k, v) {
+                        if (v.entityCount > 0) {					
+                            $.each(v.entities, function (k, value) {					
+                                if (value.type == "p") {
+                                    if(value.count){
+                                        var index = arr.findIndex(x => x.name == value.name);                                
+                                        if(index === -1){
+                                            arr.push({name:value.name, id:value.id,links:[{link:v.mainItemLink,title:v.title,description:v.description}], count:value.count})
+                                        }else{
+                                            arr[index].count = arr[index].count + value.count;
+                                            arr[index].links.push({link:v.mainItemLink,title:v.title,description:v.description})
+                                        }  
+                                    }                                                            
+                                }
+                            });
+                        }                  
+                    });
+                }) 
+                arr = arr.sort(function (a, b) {
+                    return b.count - a.count;
+                });                
+                resolve(arr);
+            })
+           
+        }catch(err){reject(err)}
+    })
+}
+function getOrgs(){
+    return new Promise((resolve, reject)=>{
+        try{
+            urls = [
+                    "https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap&?stories=events&language=en",
+                    "https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap&?stories=top&language=en",
+                ]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {                
+                var arr=[]                    
+                $.each(results, function(i,j){
+                    $.each(j.items, function (k, v) {
+                        if (v.entityCount > 0) {					
+                            $.each(v.entities, function (k, value) {					
+                                if (value.type == "o") {
+                                    if(value.count){
+                                        var index = arr.findIndex(x => x.name == value.name);                                
+                                        if(index === -1){
+                                            arr.push({name:value.name, id:value.id,links:[{link:v.mainItemLink,title:v.title,description:v.description}], count:value.count})
+                                        }else{
+                                            arr[index].count = arr[index].count + value.count;
+                                            arr[index].links.push({link:v.mainItemLink,title:v.title,description:v.description})
+                                        }  
+                                    }                                                            
+                                }
+                            });
+                        }                  
+                    });
+                }) 
+                arr = arr.sort(function (a, b) {
+                    return b.count - a.count;
+                });               
+                resolve(arr);
+            })
+           
+        }catch(err){reject(err)}
+    })
+}
+
+function getQuotes(){
+    return new Promise((resolve, reject)=>{
+        try{
+            urls = [
+                "https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap&?stories=events&language=en",
+                "https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap&?stories=top&language=en",
+            ]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {                        
+               var quotes_arr=[]
+               $.each(results, function(i,j){
+                $.each(j.items, function (k, v) {                  
+                    if (v.quoteCount > 0) {					
+                        $.each(v.quotes.slice(0,1), function (k, value) {					
+                            var index = quotes_arr.findIndex(x => x.value == value.value);  
+                            if(index == -1){
+                                quotes_arr.push({
+                                    "who":value.who,
+                                    "whoName":value.whoName,
+                                    "verb":value.verb,
+                                    "quote":value.value,
+                                    links:[{link:v.mainItemLink,title:v.title,description:v.description}]});
+                            }                            
+                        });
+                    }
+                });
+               })            
+                resolve(quotes_arr);
+            })
+           
+        }catch(err){reject(err)}
+    })
+}
+
+function getDDGInfobox(query){
+    return new Promise((resolve, reject)=>{
+        try{
+            urls = [
+                `https://api.duckduckgo.com/?q=${query}&format=json&t=DDGTest`,
+            ]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.text()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {
+                try{
+                    response = JSON.parse(results[0])
+                }catch(err){
+                    response = results[0]
+                }
+                console.log(response);
+                resolve(response);
+            })
+           
+        }catch(err){reject(err)}
+    })
+}
+
+function getSearchResultsGDELT(query){
+    return new Promise((resolve, reject)=>{
+        try{
+            urls = [
+                `https://api.gdeltproject.org/api/v2/doc/doc?query="${query}"%20sourcelang:eng&mode=artlist&maxrecords=50&sort=hybridrel&format=json&timespan=6h`,
+            ]
+            async.map(urls, async function (url) {
+                try {
+                    const response = await fetch(url)
+                    return response.json()
+                } catch (err) {
+                    return {}
+                }
+            }, (err, results) => {               
+                console.log(results[0].articles);
+                resolve(results[0].articles);
+            })
+           
+        }catch(err){reject(err)}
+    })
+}
+
+function replaceErrImg(image, hostname){
+    $(image).attr("src", `https://icon.horse/icon/${hostname.replace("www.", "")}`);
+}
+
+function getTrendingHashtags(){
+    return new Promise((resolve, reject)=>{
+        try{
+            const start = Date.now()
+            var MyDate = new Date();
+            year = MyDate.getFullYear();
+            month = ('0' + (MyDate.getMonth() + 1)).slice(-2);
+            day= ('0' + (MyDate.getDate())).slice(-2);	
+            urls = [`https://api.exportdata.io/trends/locations/worldwide?date=${year}-${month}-${day}`,
+                    `https://api.exportdata.io/trends/locations/in?date=${year}-${month}-${day}`,
+                    `https://api.exportdata.io/trends/locations/gb?date=${year}-${month}-${day}`,
+                    `https://api.exportdata.io/trends/locations/us?date=${year}-${month}-${day}`,]
+            async.mapLimit(urls, 4, async function (url) {
+                try {
+                    const response = await fetch("https://sbcors.herokuapp.com/" + url)
+                    return response.json()
+                } catch (err) {
+                    console.log(err.response);
+                }
+        
+            }, (err, results) => {
+                if (err) {console.log(err);} 
+                else{	
+                    twitterTrends = {}
+                    trends=[]	
+                    for (index in results) {
+                        for(i in results[index]){
+                            var item_index = trends.findIndex(x => x.name == results[index][i].name);
+                            if(item_index==-1){
+                                trends.push({name:results[index][i].name, volume:results[index][i].tweet_volume})
+                            }
+                        }				
+                    }
+                    trends = trends.sort(function (a, b) {
+                        return b.volume - a.volume;
+                    });	
+                    const stop = Date.now()
+                    console.log(`Time Taken to execute hashtags = ${(stop - start) / 1000} seconds`);
+                    resolve(trends);
+                }; 
+            })
+        }catch(err){reject(err)}
+    })
+}
+
+function getCB() {
+    return new Promise((resolve, reject) => {
+        try {
+            const start = Date.now()
+            urls = ["https://www.crunchbase.com/v4/data/applications/crunchbase/homepage",]
+            async.mapLimit(urls, 1, async function (url) {
+                try {
+                    const response = await fetch("https://sbcors.herokuapp.com/" + url, {
+                        method: 'get',
+                        headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36' }
+                    })
+                    return response.json();
+                } catch (err) {
+                    console.log(err.response);
+                }
+
+            }, (err, results) => {
+                if (err) { console.log(err); back.send("cb", err) }
+                else {
+                    const stop = Date.now()
+                    console.log(`Time Taken to execute CB = ${(stop - start) / 1000} seconds`);
+                    resolve(results[0])
+                };
+            })
+
+        } catch (err) { reject(err) }
+    })
+}
