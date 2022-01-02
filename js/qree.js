@@ -111,7 +111,7 @@ function load(){
         getTrendingImages().then((data=>{ console.log(data);populateTrendingImages(data)}));
     }
     if(location.hash=="#WeatherSection")  {
-        loading();
+        //loading();
         if(latitude && longitude){
             console.log(`"${latitude}, ${longitude}"`);
             getWeather(`${latitude}, ${longitude}`).then(data=>{console.log(data); populateWeather(data)});
