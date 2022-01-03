@@ -83,8 +83,10 @@ function populateHomeTopNews(data) {
                 <div class="card" style="width:100%;">
                     <img src="${imgsrc0}" class="card-img-top" alt="">
                     <div class="card-body">                    
-                        <h5 class="mt-0 fw-bold">${data[0].title}</h5>
-                        <a href="${data[0].link}" class="text-yellow underline text-truncate" style="max-width:40px">source</a>                    
+                        <h5 class="mt-0 mb-0 fw-bold">${data[0].title}</h5>
+                        <a href="${data[0].link}" class="text-yellow fw-bold" target="_blank">
+                          <u>source</u>
+                        </a>                    
                     </div>          
                 </div> 
                 <div class="row mt-2 g-0">
@@ -93,7 +95,7 @@ function populateHomeTopNews(data) {
                             <img src="${imgsrc1}" class="card-img-top" alt="">
                             <div class="card-body">                            
                                 <h6 class="mt-0 fw-bold">${data[1].title}</h6>  
-                                <a href="${data[1].link}" class="text-yellow underline text-truncate" style="max-width:40px">source</a>                          
+                                <a href="${data[1].link}" class="text-yellow underline fw-bold" target="_blank">source</a>
                             </div>                    
                         </div> 
                     </div>
@@ -102,7 +104,7 @@ function populateHomeTopNews(data) {
                             <img src="${imgsrc2}" class="card-img-top" alt="">
                             <div class="card-body">                             
                                 <h6 class="mt-0 fw-bold">${data[2].title}</h6>  
-                                <a href="${data[1].link}" class="text-yellow underline text-truncate" style="max-width:40px">source</a>                          
+                                <a href="${data[2].link}" class="text-yellow underline fw-bold" target="_blank">source</a>
                             </div>                   
                         </div>
                     </div>
@@ -117,7 +119,7 @@ function populateHomeTopNews(data) {
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>                               
                         <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6> 
-                        <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.link}" class="text-yellow underline">${v.source}</a></p> 
+                        <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.link}" class="text-yellow underline" target="_blank">${v.source}</a></p> 
                     </div>
                     <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 sqimg rounded" onerror='imgError(this)' />
                 </div>
@@ -134,7 +136,7 @@ function populateHomeTrendingNews(results) {
     var $listItem = $(`
             <li class="bg-light mb-1">        
                 <div class="card mt-2" style="width:100%;">
-                <div class="card-header">
+                <div class="card-header bg-white">
                     <div class="row">
                         <div class="col-8">
                             <h4 class="fw-bold text-main ms-2">Trending News</h4>
@@ -600,7 +602,7 @@ function populateTrendingNews(data) {
                     <div class="d-flex gap-2 w-100 justify-content-between">
                         <div> 
                             <a class="navbar-brand" href="${v.link}" target="_blank">                                
-                                <span class="mb-0 mt-0 smaller fw-bold text-yellow">${hostname.replace("www.", "")}</span> 
+                                <span class="mb-0 mt-0 smaller underline fw-bold text-yellow">${hostname.replace("www.", "")}</span> 
                             </a>                                
                             <h6 class="mb-0 fw-bold">${v.title}</h6> 
                         </div>
@@ -608,31 +610,7 @@ function populateTrendingNews(data) {
                 </div>
             </div>
         </li>
-        `);
-        // var $listItem = $(`                    
-        //                 <li class="list-group-item border-bottom mb-1 py-4"> 
-        //                     <div class="row">
-        //                         <div class="col-1 d-flex justify-content-center align-items-center">
-        //                             <button type="button" class="btn btn-yellow btn-sm" disabled>${count}</button>
-        //                         </div>
-        //                         <div class="col">
-        //                             <div class="d-flex gap-2 w-100 justify-content-between">
-        //                                 <div>                                            
-        //                                     <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6> 
-        //                                     <p class="mb-0 mt-0 small text-yellow fw-bold">${hostname.replace("www.", "")}</p> 
-        //                                 </div>
-        //                                 ${thumbnail}
-        //                                 </div>
-        //                         </div>
-        //                     </div>
-        //                 </li>
-        //                 `);
-        // $listItem.on("click", function (e) {
-        //     getArticleExtract(v.link)
-        //     window.location = "#DetailsSection";
-        //     p();
-        //     // window.open(v.link, '_blank');                   
-        // });
+        `);        
         $("#qree").append($listItem);
         count++;
     });
@@ -932,7 +910,7 @@ function populateTrendingImages(data) {
 
 // Your Weather
 function populateWeather(data) {
-    $("#qree").html("");
+    $("#qree").html(``);
     var options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
     var today = new Date();
     var date = today.toLocaleDateString("en-GB", options)

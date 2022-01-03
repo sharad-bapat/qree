@@ -109,12 +109,12 @@ function load() {
         getTrendingImages().then((data => { populateTrendingImages(data) }));
     }
     if (location.hash == "#WeatherSection") {
-        // loading();
+        loading();
         if (latitude && longitude) {
             console.log(`"${latitude}, ${longitude}"`);
             getWeather(`${latitude}, ${longitude}`).then(data => { console.log(data); populateWeather(data) });
         } else {
-            getWeather(country).then(data => { console.log(data) });
+            getWeather().then(data => { console.log(data);populateWeather(data) });
         }
     }
     if (location.hash == "#trendingPeople") {
@@ -158,27 +158,6 @@ function loading() {
     `);
 }
 
-async function getLocation() {
-    var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-    };
-    async function success(pos) {
-        var crd = pos.coords;
-        console.log('Your current position is:');
-        console.log(`Latitude : ${crd.latitude}`);
-        console.log(`Longitude: ${crd.longitude}`);
-        console.log(`More or less ${crd.accuracy} meters.`);
-        clatitude = crd.latitude;
-        clongitude = crd.longitude;
-    }
-    function error(err) {
-        console.log(err);;
-        console.log(`ERROR(${err.code}): ${err.message}`);
-    }
-    navigator.geolocation.getCurrentPosition(success, error, options);
-}
 
 function imgError(image) {
     $(image).hide();

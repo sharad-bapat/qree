@@ -182,6 +182,34 @@ var getFromBetween = {
        return this.results;
     }
  };
+function getLocation() {    
+    return new Promise((resolve, reject)=>{
+        try{
+            var options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+            navigator.geolocation.getCurrentPosition(success, error, options);
+            function success(pos) {
+                var crd = pos.coords;
+                console.log('Your current position is:');
+                console.log(`Latitude : ${crd.latitude}`);
+                console.log(`Longitude: ${crd.longitude}`);
+                console.log(`More or less ${crd.accuracy} meters.`);       
+                resolve({"latitude":crd.latitude, "longitude":crd.longitude});
+            }
+            function error(err) {
+                console.log(err);;
+                console.log(`ERROR(${err.code}): ${err.message}`);
+                reject(err);
+            }
+        }catch(err){reject(err)}
+    })
+   
+    
+}
+
  
 
 
@@ -855,8 +883,13 @@ function getTrendingImages(){
 //Your Weather
 function getWeather(latitude,longitude){
     return new Promise((resolve, reject)=>{
-        try{ 
-            DDG_Forecast(latitude,longitude).then((data=>resolve(data)));                 
+        try{
+            if(latitude && longitude) {
+                DDG_Forecast(latitude,longitude).then((data=>resolve(data)));   
+            }else{
+                if(navigator.languages)
+                DDG_Forecast(`London, UK`).then(data=>resolve(data));
+            }                         
         }catch(err){reject(err)}
     })
 }
