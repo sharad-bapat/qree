@@ -127,11 +127,11 @@ svg:hover, svg:active, svg:focus-visible{
 }
 
 ::-webkit-scrollbar:vertical {
-  width: 10px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar:horizontal {
-  height: 10px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {

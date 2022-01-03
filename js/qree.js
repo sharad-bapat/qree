@@ -6,11 +6,10 @@ console.log(latitude, longitude);
 var country = "";
 var language = ""
 getCountry();
-// getLocation();
-if(country && language){
+if (country && language) {
     console.log(`Country:${country}, Language: ${language}`);
 }
-function getCountry(){
+function getCountry() {
     country = navigator.languages[0].split("-")[1]
     language = navigator.languages[0].split("-")[0]
 }
@@ -19,7 +18,7 @@ window.addEventListener('hashchange', function () {
     if (!location.hash || location.hash == "#" || location.hash == "") {
         window.location = "#homeSection";
     }
-    console.log(location.hash );
+    console.log(location.hash);
     load();
 }, false);
 onPageLoad();
@@ -30,16 +29,15 @@ function onPageLoad() {
     load();
 }
 
-function getBGData(){
+function getBGData() {
     getHomeTopStories();
     getHomeTrendingNews();
-    getWikiData();
     getGoogleTrends();
-    getEvents();
     getAllTrendingNews();
+    getGoogleSearchTrends();
 }
 
-function load(){
+function load() {
     if (location.hash == "#homeSection") {
         loading();
         getHomeTopStories()
@@ -50,110 +48,114 @@ function load(){
                 })
             });
     }
-    if(location.hash=="#wikiSection")  {
+    if (location.hash == "#wikiSection") {
         loading();
-        getWikiData().then((data=>{ populateWiki(data)}));
+        getWikiData().then((data => { populateWiki(data) }));
     }
-    if(location.hash=="#googleTrendsSection")  {
+    if (location.hash == "#googleTrendsSection") {
         loading();
-        getGoogleTrends().then((data=>{ populateGoogleTrends(data)}));
+        getGoogleTrends().then((data => { populateGoogleTrends(data) }));
     }
-    if(location.hash=="#eventsSection")  {
+    if (location.hash == "#eventsSection") {
         loading();
-        getEvents().then((data=>{ populateEvents(data)}));
+        getEvents().then((data => { populateEvents(data) }));
     }
-    if(location.hash=="#GoogleSearchTrendsSection")  {
+    if (location.hash == "#GoogleSearchTrendsSection") {
         loading();
-        getGoogleSearchTrends().then(data=>{ populateGoogleSearchTrends(data)});
+        getGoogleSearchTrends().then(data => { populateGoogleSearchTrends(data) });
     }
-    if(location.hash=="#HBDSection")  {
+    if (location.hash == "#HBDSection") {
         loading();
-        getWikiEvents().then(data=>{populateWikiEvents(data)});
+        getWikiEvents().then(data => { populateWikiEvents(data) });
     }
-    if(location.hash=="#topNewsSection")  {
+    if (location.hash == "#topNewsSection") {
         loading();
-        getTopNews().then(data=>{populateTopNews(data)});
+        getTopNews().then(data => { populateTopNews(data) });
     }
-    if(location.hash=="#trendingNewsSection")  {
+    if (location.hash == "#trendingNewsSection") {
         loading();
-        getAllTrendingNews().then(data=>{ populateTrendingNews(data)});
+        getAllTrendingNews().then(data => { populateTrendingNews(data) });
     }
-    if(location.hash=="#newsNearMeSection")  {
+    if (location.hash == "#newsNearMeSection") {
         loading();
-        if(latitude && longitude){
-            getNearbyNews(latitude,longitude).then(data=>{populateNearbyNews(data)});
-        }else{
-            getNearbyNews().then(data=>{populateNearbyNews(data)});
+        if (latitude && longitude) {
+            getNearbyNews(latitude, longitude).then(data => { populateNearbyNews(data) });
+        } else {
+            getNearbyNews().then(data => { populateNearbyNews(data) });
         }
     }
-    if(location.hash=="#trendingLocations")  {
+    if (location.hash == "#trendingLocations") {
         loading();
-        getTrendingLocations().then(data=>{console.log(data);populateTrendingLocations(data)});
+        getTrendingLocations().then(data => {populateTrendingLocations(data) });
     }
-    if(location.hash=="#TrendingWPSection")  {
-        getTrendingPosts().then(data=>{populateTrendingPosts(data)});
+    if (location.hash == "#TrendingWPSection") {
+        getTrendingPosts().then(data => { populateTrendingPosts(data) });
     }
-    if(location.hash=="#LongReadsSection")  {
+    if (location.hash == "#LongReadsSection") {
         loading();
-        getLongReads().then(data=>{populateLongReads(data)});
+        getLongReads().then(data => { populateLongReads(data) });
     }
-    if(location.hash=="#trendingStreamsSection")  {
+    if (location.hash == "#trendingStreamsSection") {
         loading();
-        getTrendingStreams().then((data=>{ console.log(data);populateStreams(data)}));
+        getTrendingStreams().then((data => {populateStreams(data) }));
     }
-    if(location.hash=="#newsImagerySection")  {
+    if (location.hash == "#newsImagerySection") {
         loading();
         // populateImagery();
-        getNewsImagery().then((data=>{ console.log(data);populateImagery(data)}));
+        getNewsImagery().then((data => {populateImagery(data) }));
     }
-    if(location.hash=="#TrendingImagesSection")  {
+    if (location.hash == "#TrendingImagesSection") {
         loading();
-        getTrendingImages().then((data=>{ console.log(data);populateTrendingImages(data)}));
+        getTrendingImages().then((data => { populateTrendingImages(data) }));
     }
-    if(location.hash=="#WeatherSection")  {
-        //loading();
-        if(latitude && longitude){
+    if (location.hash == "#WeatherSection") {
+        // loading();
+        if (latitude && longitude) {
             console.log(`"${latitude}, ${longitude}"`);
-            getWeather(`${latitude}, ${longitude}`).then(data=>{console.log(data); populateWeather(data)});
-        }else{
-            getWeather(country).then(data=>{console.log(data)});
+            getWeather(`${latitude}, ${longitude}`).then(data => { console.log(data); populateWeather(data) });
+        } else {
+            getWeather(country).then(data => { console.log(data) });
         }
     }
-    if(location.hash=="#trendingPeople")  {
+    if (location.hash == "#trendingPeople") {
         loading();
-        getPeople().then((data=>{ console.log(data);populateTrendingPeople(data)}));
+        getPeople().then((data => { populateTrendingPeople(data); }));
     }
-    if(location.hash=="#trendingEntities")  {
+    if (location.hash == "#trendingEntities") {
         loading();
-        getOrgs().then((data=>{ console.log(data);populateTrendingPeople(data)}));
+        getOrgs().then((data => {populateTrendingPeople(data) }));
     }
-    if(location.hash=="#trendingQuotes")  {
+    if (location.hash == "#trendingQuotes") {
         loading();
-        getQuotes().then((data=>{console.log(data);populateTrendingQuotes(data)}));
+        getQuotes().then((data => { populateTrendingQuotes(data) }));
     }
-    if(location.hash=="#trendingHashtags")  {
+    if (location.hash == "#trendingHashtags") {
         loading();
-        getTrendingHashtags().then((data=>{console.log(data);populateHashtags(data)}));
+        getTrendingHashtags().then((data => { populateHashtags(data) }));
     }
-      if(location.hash=="#trendingAQs")  {
+    if (location.hash == "#trendingAQs") {
         loading();
-        getCB().then((data=>{ console.log(data);populateCB(data)}));
+        getCB().then((data => { populateCB(data) }));
     }
-  
-    
-    // getOrgs().then((data=>{ console.log(data);}));
-    // getQuotes().then((data=>{ console.log(data);}));
+    if (location.hash == "#trendingYT") {
+        loading();
+        getYTTrends().then((data => { populateYT(data) }));
+    }
+    if (location.hash == "#trendingStocks") {
+        loading();
+        getStocks().then((data => { populateStocks(data) }));
+    }
     setInterval(getBGData, 15 * 60000);
 }
 
-function loading(){
+function loading() {
     $("#qree").html("");
     $("#qree").html(`
         <div class="d-flex align-items-center">
             <strong>Loading...</strong>
             <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
         </div>
-    `);    
+    `);
 }
 
 async function getLocation() {
@@ -177,227 +179,12 @@ async function getLocation() {
     }
     navigator.geolocation.getCurrentPosition(success, error, options);
 }
-function getTimeline() {
-    urls = ["https://api.gdeltproject.org/api/v2/doc/doc?timespan=1h&query=sourcelang:eng%20(domain:bbc.com%20OR%20domain:cnn.com%20OR%20domain:economictimes.indiatimes.com%20OR%20domain:theguardian.com)&mode=TimelineVolInfo&sort=hybridrel&format=json",
-            "https://api.gdeltproject.org/api/v2/doc/doc?timespan=3h&query=sourcelang:eng%20(domain:news18.com%20OR%20domain:theprint.in%20OR%20domain:livemint.com%20OR%20domain:thehindu.com)&mode=TimelineVolInfo&sort=hybridrel&format=json"
-           ]
-    async.mapLimit(urls, 1, async function (url) {
-        try {
-            const response = await fetch(url)
-            return response.json()
-        } catch (err) {
-            // console.trace(err);
-        }
-
-    }, (err, results) => {
-        // if (err) { console.log(err); }
-        arr = []
-        for (index in results) {
-            results[index].timeline[0].data.forEach(item => {
-                arr.push({"created": item.date.replace("T","").replace("Z",""), "articles": item.toparts})
-            });
-        }
-        arrr = arr.sort(function (a, b) {
-            return b.created - a.created;
-        });
-        $("#risingNews").html(``);
-        $.each(arrr, function (k, v) {
-            $.each(v.articles,function(k,v){
-                var { hostname } = new URL(v.url);
-                var $listItem = $(`
-                <li class="list-group-item border-bottom py-4 bg-light mb-1" style="cursor:pointer">
-                    <div class="d-flex gap-2 w-100 justify-content-between">
-                        <div>
-                            <h5 class="mb-0 mt-0 fw-bold">${v.title}</h5>
-                            <p class="mb-0 mt-1 opacity-75 small">${hostname}</p>
-                        </div>
-                        <img src="https://www.google.com/s2/favicons?sz=32&domain=${hostname}" alt="" width="32" height="32" class="rounded-circle flex-shrink-0 mb-1">
-                    </div>
-
-                </li>
-                `);
-                $listItem.on("click", function (e) {
-                    window.open(v.url, '_blank');
-                });
-                $("#risingNews").append($listItem);
-            })
-        });
-
-        $("body").css({ "opacity": "1" });
-        $("body").css({"cursor": ""});
-    })
-}
-// getRSS();
-function getRSSviaFeedly(){
-    const start = Date.now()
-    var start_url = `https://feedly.com/v3/feeds/feed%2F`;
-    var end_url = `?numRecentEntries=50&ck=1620410511531&ct=feedly.desktop&cv=31.0.1225`;
-    var gTopicurl = `https%3A%2F%2Fnews.google.com%2Frss%2Ftopics%2F`;
-    var gSearchurl = `https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3D`
-    // (site:.firstpost.com+OR+site:bloombergquint.com+OR+site:thequint.com)
-    // top sites :  (site:.reuters.com+OR+site:npr.org+OR+site:nytimes.com+OR+site:cnn.com+OR+site:foxnews.com+OR+site:apnews.com+OR+site:wsj.com)
-    // https://apnews.com/771a653ce572cb67ad60c1343bca1e2f/
-    var param = "";
-		// "https://sbcors.herokuapp.com/https://news.google.com/rss/search?q=(site:india.com+OR+site:business-standard.com+OR+site:livemint.com+OR+site:hindustantimes.com+OR+site:moneycontrol.com+OR+site:indianexpress.com+OR+site:tribuneindia.com+OR+site:hindustantimes.com+OR+site:ndtv.com+OR+site:indiatimes.com+OR+site:thehindu.com+OR+site:news18.com+OR+site:thewire.in)+when:1h&hl=en&gl=IN&ceid=IN:en",
-    urls = [
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGRqTVhZU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNREpxYW5RU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gSearchurl}omicron${end_url}`,
-        `${start_url}${gSearchurl}%28site%3Abusiness-standard.com%2BOR%2Bsite%3Alivemint.com%2BOR%2Bsite%3Ahindustantimes.com%2BOR%2Bsite%3Amoneycontrol.com%2BOR%2Bsite%3Aindianexpress.com%2BOR%2Bsite%3Andtv.com%2BOR%2Bsite%3Aindiatimes.com%2BOR%2Bsite%3Athehindu.com%2BOR%2Bsite%3Anews18.com%2BOR%2Bsite%3Athewire.in%29%2Bwhen%3A6h${end_url}`
-    ]
-    async.mapLimit(urls, 5, async function (url) {
-        try {
-            const response = await fetch(url)
-            return response.json()
-        } catch (err) {
-            console.log(err);
-            return {};
-        }
-
-    }, (err, results) => {
-		const stop = Date.now()
-        if (err) {console.log(err);}
-		else{
-			// rss = {}
-			// for (index in results) {
-			// 	if (index == 0) {
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.india = arrr;
-			// 	}else if (index == 1){
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.hindi = arrr;
-			// 	}
-			// 	else if (index == 2){
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.entertainment = arrr;
-			// 	}
-			// 	else if (index == 3){
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.business = arrr;
-			// 	}
-			// }
-			const stop = Date.now()
-			console.log(`Time Taken to execute RSS News = ${(stop - start) / 1000} seconds`);
-            console.log(results);
-            setLocalStorage("rss", results, 60 * 60000);
-            $("body").css({ "opacity": "1" });
-            $("body").css({"cursor": ""});
-
-		};
-    })
-}
-
-function getRSS(){
-    const start = Date.now()
-      urls = [
-        // `https://api-panda.com/v4/articles/rss?feedId=61cda14cc7fc328dd9bf0e43`,
-        // `https://api-panda.com/v4/articles/rss?feedId=61cda34bc7fc3277dabf1a9c`
-        ``
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRGRqTVhZU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNREpxYW5RU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gTopicurl}CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JXVnVMVWRDR2dKSFFpZ0FQAQ${end_url}`,
-        `${start_url}${gSearchurl}omicron${end_url}`,
-        `${start_url}${gSearchurl}%28site%3Abusiness-standard.com%2BOR%2Bsite%3Alivemint.com%2BOR%2Bsite%3Ahindustantimes.com%2BOR%2Bsite%3Amoneycontrol.com%2BOR%2Bsite%3Aindianexpress.com%2BOR%2Bsite%3Andtv.com%2BOR%2Bsite%3Aindiatimes.com%2BOR%2Bsite%3Athehindu.com%2BOR%2Bsite%3Anews18.com%2BOR%2Bsite%3Athewire.in%29%2Bwhen%3A6h${end_url}`
-    ]
-    async.mapLimit(urls, 5, async function (url) {
-        try {
-            const response = await fetch(url)
-            return response.json()
-        } catch (err) {
-            console.log(err);
-            return {};
-        }
-
-    }, (err, results) => {
-		const stop = Date.now()
-        if (err) {console.log(err);}
-		else{
-			// rss = {}
-			// for (index in results) {
-			// 	if (index == 0) {
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.india = arrr;
-			// 	}else if (index == 1){
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.hindi = arrr;
-			// 	}
-			// 	else if (index == 2){
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.entertainment = arrr;
-			// 	}
-			// 	else if (index == 3){
-			// 		arr = []
-			// 		results[index].items.forEach(item => {
-			// 			arr.push({ "title": item.title, "created": Date.parse(item.isoDate)/1000, "link": item.link})
-			// 		})
-			// 		arrr = arr.sort(function (a, b) {
-			// 			return b.created - a.created;
-			// 		});
-			// 		rss.business = arrr;
-			// 	}
-			// }
-			const stop = Date.now()
-			console.log(`Time Taken to execute RSS News = ${(stop - start) / 1000} seconds`);
-            console.log(results);
-            setLocalStorage("rss", results, 60 * 60000);
-            $("body").css({ "opacity": "1" });
-            $("body").css({"cursor": ""});
-
-		};
-    })
-}
 
 function imgError(image) {
     $(image).hide();
- }
+}
 
- function getArticleExtract(url) {
+function getArticleExtract(url) {
     $("#wpContent").html(``);
     async.tryEach([
         (next) => {
@@ -452,7 +239,7 @@ function imgError(image) {
             fetchURL(`https://api-panda.com/v2/feeds/story/full?url=${url}`).then(data => {
                 if (data.success) {
                     console.clear()
-                    data =  data.data;
+                    data = data.data;
                     // console.log(data.data.data.title);
                     let title = data.data.title ? data.data.title : ``;
                     let content = data.data.html ? data.data.html : ``;
@@ -512,7 +299,6 @@ function imgError(image) {
 
 }
 
-
 async function fetchURL(url) {
     const response = await fetch(url);
     const text = await response.text();
@@ -533,26 +319,11 @@ async function fetchURL(url) {
 // urlTest("https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?noform=1&partnerId=2&fund=1&exthrs=0&output=json&requestMethod=quick&symbols=.SPX%7C.IXIC%7C.DJI%7C.FTSE%7C.N225%7C.HSI%7C.SSEC%7C.VIX%7C.GDAXI")
 // urlTest("https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP")
 // TestGroupBy("https://sbcors.herokuapp.com/https://rsoe-edis.org/gateway/webapi/events/")
-async function urlTest(url){
-    try{
-        const response =  await fetch(url);
+async function urlTest(url) {
+    try {
+        const response = await fetch(url);
         console.log(await response.json())
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
-   }
-
-async function TestGroupBy(url){
-    try{
-        const response =  await fetch(url);
-        const data = await response.json();
-        console.log(groupBy(data.features, (c) => c.properties.categoryName));
-
-    }catch(err){
-        console.log(err);
-    }
-   }
-
-function groupBy(xs, f) {
-    return xs.reduce((r, v, i, a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {});
-  }
+}

@@ -1,4 +1,76 @@
-function populateHomeTopNews(data){
+// Helper Functions
+function populateDetails(k) {
+    v = getLocalStorage("TopNews")[k]
+    $("#qree").html(``);
+    var { hostname } = new URL(v.link);
+    var $listItem = $(`
+                    <li class="list-group-item border-bottom bg-light py-4 mb-1">
+                        <div class="row">                    
+                            <div class="col-12">                                
+                                <p class="smaller fw-bold mb-0"><span class="text-yellow">${hostname}</span>, <span class="text-main">${v.date}</span></p> 
+                               <h5 class="mt-0 fw-bold">${v.title}</h5>
+                                <p class="mt-1 small">${v.content}</p>
+                            </div>                   
+                        </div>
+                    </li>                              
+                    `);
+    $("#qree").append($listItem);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function populateWPDetails(v) {
+    v = getLocalStorage("LongReads")[v]
+    $("#qree").html(``);
+    var $listItem = $(`
+                    <li class="list-group-item border-bottom bg-light py-4 mb-1">
+                        <div class="row">                    
+                            <div class="col-12">                                
+                                <p class="small">${v.date}</p>
+                                <h5>${v.title}</h5>
+                                <p>${v.content}</p>
+                            </div>                   
+                        </div>
+                    </li>                              
+                    `);
+    $("#qree").append($listItem);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function imgParentError(image) {
+    $(image).parent().parent().hide();
+}
+function getWPORGFeaturedMediaURL(id) {
+    return new Promise((resolve, reject) => {
+        try {
+            urls = ["id"]
+            async.mapLimit(urls, 1, async function (url) {
+                try {
+                    const response = await fetch(url);
+                    return response.json()
+                } catch (err) {
+                    resolve({})
+                }
+            }, (err, results) => {
+                response = results[0].source_url;
+                resolve(response)
+            })
+        } catch (err) { reject(err) }
+    })
+
+}
+function imgErrorPeople(k, name) {
+    $(`#fig${k}`).html(`
+         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person border-1" viewBox="0 0 16 16">
+             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+         </svg>
+         <figcaption class="text-black small mt-0 fw-bold">${name}</figcaption>
+         `);
+    // console.clear();
+}
+function imgErrorloadicon(image,hostname) {
+    $(image).attr("src",`https://icon.horse/icon/${hostname.replace("www.", "")}`);
+}
+
+// Home Page
+function populateHomeTopNews(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-2 fw-bold text-main ms-2">Top Stories</h4>`);
     $("#qree").append($listItem);
@@ -54,13 +126,12 @@ function populateHomeTopNews(data){
             $("#qree").append($listItem);
         })
     } catch (err) {
-        
+
     }
 }
-
-function populateHomeTrendingNews(results){
+function populateHomeTrendingNews(results) {
     arr = []
-        var $listItem = $(`
+    var $listItem = $(`
             <li class="bg-light mb-1">        
                 <div class="card mt-2" style="width:100%;">
                 <div class="card-header">
@@ -88,11 +159,11 @@ function populateHomeTrendingNews(results){
                 </div>
             </li>
             `);
-        $("#qree").append($listItem);
-        var count=1;
-        $.each(results, function(k,v){
-            var { hostname } = new URL(v.link);
-            var $listItem = $(`                    
+    $("#qree").append($listItem);
+    var count = 1;
+    $.each(results, function (k, v) {
+        var { hostname } = new URL(v.link);
+        var $listItem = $(`                    
                 <li class="list-group-item border-bottom mb-1"> 
                     <div class="row">
                         <div class="col-2 d-flex justify-content-center align-items-center">
@@ -111,20 +182,63 @@ function populateHomeTrendingNews(results){
                     </div>
                 </li>
                 `);
-            $("#firstPageTrendingNews").append($listItem);
-            count++;
-        });
+        $("#firstPageTrendingNews").append($listItem);
+        count++;
+    });
 
 }
 
+// Trending Wiki
 function populateWiki(data) {
-   
-    var mostread = data.mostread
     $("#qree").html(``);
+    var $listItem = $(`<h4 class="mt-4 mb-4 fw-bold text-main ms-2">Most Read Articles, Featured and On this day</h4>`);
+    $("#qree").append($listItem);
+    $("#qree").append(`
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="mostread-tab" data-bs-toggle="tab" data-bs-target="#mostread" type="button" role="tab" aria-controls="mostread" aria-selected="true">Most Read</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="featured-tab" data-bs-toggle="tab" data-bs-target="#featured" type="button" role="tab" aria-controls="featured" aria-selected="false">Featured</button>
+        </li>     
+        <li class="nav-item" role="presentation">
+        <button class="nav-link" id="otd-tab" data-bs-toggle="tab" data-bs-target="#otd" type="button" role="tab" aria-controls="otd" aria-selected="false">OTD</button>
+    </li>   
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="mostread" role="tabpanel" aria-labelledby="mostread-tab"></div>
+        <div class="tab-pane fade" id="featured" role="tabpanel" aria-labelledby="featured-tab"></div> 
+        <div class="tab-pane fade" id="otd" role="tabpanel" aria-labelledby="otd-tab"></div>       
+    </div>
+    `);
+    var mostread = data.mostread
+    $.each(mostread, function (k, v) {
+        let imgsrc = v.thumbnail ? v.thumbnail.source : ``
+        var $listItem = $(`                    
+        <li class="list-group-item border-0 border-bottom py-4 bg-light mb-1" >                                        
+            <div class="d-flex gap-2 w-100 justify-content-between">
+                <div>
+                    <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6>
+                    <p class="mb-0 mt-1 small fw-bold">${v.description}</p> 
+                    <p class="mb-0 mt-1 small fw-bold text-yellow">Views: ${v.views.toLocaleString("en-GB")}</p>                                                     
+                </div>
+                <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 sqimg mt-0 rounded" onerror='imgError(this)' />
+            </div>
+            <div>
+                <details>
+                    <summary><span class="smaller fw-bold mt-2">Read more about ${v.title}</span></summary>
+                    <p class="mb-0 mt-1 small">${v.extract}</p>
+                    <p class="mb-0 mt-1 small"><a href="${v.link}" target="_blank">Read full article on Wikipedia</a></p>
+                </details>
+            </div>
+        </li>
+        `);
+        $("#mostread").append($listItem);
+    });
     var image = data.image
     let imgsrc = image.thumbnail ? image.thumbnail : ``
     var $listItem = $(`                    
-                    <li class="bg-light mb-1">   
+                    <li class="bg-light mt-4 mb-1">   
                         <div class="card" style="width:100%;">
                             <div class="card-header text-yellow"><h5 class="fw-bold">Featured Image</h5></div>
                             <img src="${imgsrc}" class="card-img-top" alt="" onerror='imgError(this)' />
@@ -136,30 +250,7 @@ function populateWiki(data) {
                         </div>
                     </li>
                     `);
-    $("#qree").append($listItem);
-    var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Most Read Articles</h4>`);
-    $("#qree").append($listItem);    
-    $.each(mostread.slice(0, 10), function (k, v) {
-        let imgsrc = v.thumbnail ? v.thumbnail.source : ``
-        var $listItem = $(`                    
-        <li class="list-group-item border-bottom py-4 bg-light mb-1" >                                        
-            <div class="d-flex gap-2 w-100 justify-content-between">
-                <div>
-                    <details>
-                        <summary><h6 class="mb-0 mt-0 fw-bold">${v.title}</h6><br>
-                            <p class="mb-0 mt-1 small fw-bold">${v.description}</p><br> 
-                            <p class="mb-0 mt-1 small fw-bold text-yellow">Views: ${v.views.toLocaleString("en-GB")}</p>                         
-                        </summary>
-                        <p class="mb-0 mt-1 small">${v.extract}</p>  
-                        <p class="mb-0 mt-1 small"><a href="${v.link}" target="_blank">Read full article on Wikipedia</a></p>   
-                    </details>                                                        
-                </div>
-                <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 sqimg mt-0 rounded" onerror='imgError(this)' />
-            </div>
-        </li>
-        `);
-        $("#qree").append($listItem);
-    });
+    $("#featured").append($listItem);
     var tfa = data.tfa
     let taimgsrc = tfa.thumbnail ? tfa.thumbnail : ``
     var $listItem = $(`                    
@@ -169,19 +260,18 @@ function populateWiki(data) {
                             <img src="${taimgsrc}" class="card-img-top" alt="" onerror='imgError(this)' />
                             <div class="card-body"> 
                                 <h5 class="mt-0 fw-bold">${tfa.title}</h5> 
-                                <p class="mt-1 mb-0 small fw-bold">Artist: ${tfa.content}</p>
+                                <p class="mt-1 mb-0 small fw-bold">${tfa.content}</p>
                             </details>         
                             </div>                            
                         </div>
                     </li>
                     `);
-    $("#qree").append($listItem);
-    
-    var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">On this day</h4>`);
-    $("#qree").append($listItem);
-    $.each(data.otd, function(k,v){
-        var details = ""     
-        $.each(v.pages, function(i,j){
+    $("#featured").append($listItem);
+
+
+    $.each(data.otd, function (k, v) {
+        var details = ""
+        $.each(v.pages, function (i, j) {
             details += `<div class="d-flex gap-2 w-100 justify-content-between my-4">
             <div>
                 <details class="top-details" style="cursor:pointer"><summary><h6 class="mb-0 mt-0 fw-bold">${j.title}</h6><br>
@@ -208,17 +298,18 @@ function populateWiki(data) {
             </div>	
            
         </li>
-        `);           
-        $("#qree").append($listItem);       
+        `);
+        $("#otd").append($listItem);
     });
 }
 
-function populateGoogleTrends(data){
+// Trending Searches
+function populateGoogleTrends(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Realtime trends</h4>`);
     $("#qree").append($listItem);
-    $.each(data, function (k, v) {                
-        let imgsrc = v.image.imgUrl ? `<img src="http:${v.image.imgUrl}" alt="" width="96" height="96" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``               
+    $.each(data, function (k, v) {
+        let imgsrc = v.image.imgUrl ? `<img src="http:${v.image.imgUrl}" alt="" width="96" height="96" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``
         var $listItem = $(`
         <li class="list-group-item border-bottom py-4 bg-light mb-0" style="cursor:pointer"> 
                 <div class="d-flex gap-2 w-100 justify-content-between">
@@ -231,83 +322,88 @@ function populateGoogleTrends(data){
                     </div>
                     ${imgsrc}
                 </div>   
-        </li>`);               
+        </li>`);
         $("#qree").append($listItem);
-        $.each(v.articles, function (a, b) {                   
+        $.each(v.articles, function (a, b) {
             var $listItem = $(
-                            `<div class="d-flex gap-2 w-100 justify-content-between mb-2">
+                `<div class="d-flex gap-2 w-100 justify-content-between mb-2">
                             <details>
                                 <summary><span class="">${b.articleTitle}</span></summary>
                                 <div class="d-flex gap-2 w-100 justify-content-between mb-2 mt-2">
                                     <p class="small fw-bold">${b.snippet} <span class="text-muted"><a href="${b.url}" target="_blank" style="color:blue;text-decoration:underline">Read full article at ${b.source}</span></p>                                      
                                 </div>                                                                           
                              </details> 
-                            </div>`);                  
+                            </div>`);
             $(`#${k}googleTrends`).append($listItem);
         });
     })
 }
 
-function populateEvents(data){    
+// Trending Events
+function populateEvents(data) {
+    var byCategory = groupBy(data, (c) => c.category);
     $("#qree").html("");
-    for (const [ key, value ] of Object.entries(data)) {
+    for (const [key, value] of Object.entries(byCategory)) {
         var $listItem = $(`                    
             <li class="list-group-item border-bottom py-4 bg-light mb-1"> 
             <details>
                 <summary><h6 class="mt-0 fw-bold">${key}</h6></summary>
-                <ul class="list-group list-group-flush mt-2" id="${key.replaceAll(" ","").replaceAll("(","").replaceAll(")","")}" style="max-width:calc(100vw - 10px);">
+                <ul class="list-group list-group-flush mt-2" id="${key.replaceAll(" ", "").replaceAll("(", "").replaceAll(")", "")}" style="max-width:calc(100vw - 10px);">
                 </ul>
             </details>   
             </li>
         `);
         $("#qree").append($listItem);
-        $.each(value, function(k,v){ 
-            if(v.properties.updates){
-                v = v.properties.updates[v.properties.updates.length-1]
-            }
-            var unixtime = v.properties.lastUpdate;
+        $.each(value, function (k, v) {
+            var unixtime = v.date;
             var currTime = Date.now();
-            var timediff = Math.round(currTime / 1000 - unixtime/1000);
+            var timediff = Math.round(currTime / 1000 - unixtime / 1000);
             if (timediff / 60 / 60 < 1) {
                 timediff = Math.round(timediff / 60) + " minutes ago";
             } else if (Math.round(timediff / 60 / 60) === 1) {
                 timediff = Math.round(timediff / 60 / 60) + " hour ago";
-            } else {
+            } else if (Math.round(timediff / 60 / 60) > 1 && Math.round(timediff / 60 / 60) < 24) {
                 timediff = Math.round(timediff / 60 / 60) + " hours ago";
+            } else if (Math.round(timediff / 60 / 60) === 24) {
+                timediff = Math.round(timediff / 60 / 60) + " day ago";
+            } else {
+                timediff = Math.round(timediff / 60 / 60 / 24) + " days ago";
             }
-            try{
+            try {
                 var $listItem = $(`                    
                 <li class="list-group-item border-bottom py-2 bg-light mb-1">                                        
                     <div class="d-flex gap-2 w-100 justify-content-between">
                         <div>
                             <p class="small fw-bold text-yellow mb-0">${timediff}</p>
                             <details><summary>                              
-                            <h6 class="mb-0 mt-0 fw-bold">${v.properties.title}</h6> 
+                            <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6> 
                             </summary>
-                            <p class="mb-0 mt-1 small">${v.properties.details}</p> 
+                            <p class="mb-0 mt-2 text-main smaller">${new Date(v.date)}</p>
+                            <p class="mb-0 mt-1 small">${v.details}</p> 
                         </div>
                     </div>
                 </li>
-                `);       
-                $(`#${key.replaceAll(" ","").replaceAll("(","").replaceAll(")","")}`).append($listItem);
-            }catch(err){
-                console.log(err,v);
+                `);
+                $(`#${key.replaceAll(" ", "").replaceAll("(", "").replaceAll(")", "")}`).append($listItem);
+            } catch (err) {
+                console.log(err, v);
             }
-           
+
         })
-    }  
-    
+    }
+
 }
 
-function populateGoogleSearchTrends(data){
+// Realtime Trends
+function populateGoogleSearchTrends(data) {
     $("#qree").html(``);
-    var arr=[];
-    $.each(data, function (k,v){
-        $.each(v.default.trendingSearchesDays, function(i,j){            
-            $.each(j.trendingSearches, function(a,b){                                
+    var arr = [];
+    $.each(data, function (k, v) {
+        $.each(v.default.trendingSearchesDays, function (i, j) {
+            $.each(j.trendingSearches, function (a, b) {
                 arr.push({
-                    "title":b.title,
-                    "traffic":b.formattedTraffic,
+                    "title": b.title,
+                    "traffic": b.formattedTraffic,
                     "articles": b.articles,
                     "image": b.image.imageUrl,
                     "date": Date.parse(j.formattedDate),
@@ -315,7 +411,7 @@ function populateGoogleSearchTrends(data){
 
                 })
             })
-            
+
         })
     });
     arr = arr.sort(function (a, b) {
@@ -323,8 +419,8 @@ function populateGoogleSearchTrends(data){
     });
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Trending Searches</h4>`);
     $("#qree").append($listItem);
-    $.each(arr, function(k,v){        
-        let imgsrc = v.image ? `<img src="${v.image}" alt="" width="96" height="96" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``    
+    $.each(arr, function (k, v) {
+        let imgsrc = v.image ? `<img src="${v.image}" alt="" width="96" height="96" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``
         let article0imgsrc = v.articles[0].image ? v.articles[0].image.imageUrl : ``
         var $listItem = $(`
         <li class="list-group-item border-bottom py-4 bg-light mb-0" style="cursor:pointer"> 
@@ -344,10 +440,10 @@ function populateGoogleSearchTrends(data){
                         </details>                   
                     </div>                  
                 </div>   
-        </li>`);               
+        </li>`);
         $("#qree").append($listItem);
-        $.each(v.articles.slice(1), function (a, b) { 
-            let imgsrc1 = b.image ? b.image.imageUrl : ``  
+        $.each(v.articles.slice(1), function (a, b) {
+            let imgsrc1 = b.image ? b.image.imageUrl : ``
             var $listItem = $(
                 `<div class="d-flex gap-2 w-100 justify-content-between mb-2">
                     <details>
@@ -357,17 +453,18 @@ function populateGoogleSearchTrends(data){
                         </div>                                                                           
                     </details> 
                     <img src="${imgsrc1}" alt="" width="64" height="64" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />
-                </div>`);   
+                </div>`);
             $(`#${k}GoogleSearchTrends`).append($listItem);
         });
     })
 }
 
-function populateWikiEvents(data){   
+// HBD Today
+function populateWikiEvents(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-2 mb-4 fw-bold text-main ms-2">Holidays, Births and Deaths</h4>`);
-    $("#qree").append($listItem); 
-    
+    $("#qree").append($listItem);
+
     $("#qree").append(`
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -387,9 +484,9 @@ function populateWikiEvents(data){
     </div>
     `);
 
-    $.each(data.holidays, function(k,v){
-        var details = ""     
-        $.each(v.pages, function(i,j){
+    $.each(data.holidays, function (k, v) {
+        var details = ""
+        $.each(v.pages, function (i, j) {
             details += `<div class="d-flex gap-2 w-100 justify-content-between my-4">
             <div>
                 <details class="top-details" style="cursor:pointer"><summary><h6 class="mb-0 mt-0 fw-bold">${j.title}</h6><br>
@@ -415,13 +512,13 @@ function populateWikiEvents(data){
             </div>	
            
         </li>
-        `);           
-        $("#holidaysWiki").append($listItem);       
+        `);
+        $("#holidaysWiki").append($listItem);
     });
-      
-    $.each(data.births, function(k,v){
-        var details = ""     
-        $.each(v.pages.slice(0,1), function(i,j){
+
+    $.each(data.births, function (k, v) {
+        var details = ""
+        $.each(v.pages.slice(0, 1), function (i, j) {
             details += `<div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
                 <p class="mb-0 mt-2 fw-bold text-yellow">${v.year}</p> 
@@ -441,13 +538,13 @@ function populateWikiEvents(data){
                 ${details}                                                      
             </div> 	           
         </li>
-        `);           
-        $("#birthsWiki").append($listItem);      
+        `);
+        $("#birthsWiki").append($listItem);
     });
-     
-    $.each(data.deaths, function(k,v){
-        var details = ""     
-        $.each(v.pages.slice(0,1), function(i,j){
+
+    $.each(data.deaths, function (k, v) {
+        var details = ""
+        $.each(v.pages.slice(0, 1), function (i, j) {
             details += `<div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
                 <p class="mb-0 mt-2 fw-bold text-yellow">${v.year}</p> 
@@ -467,17 +564,18 @@ function populateWikiEvents(data){
                 ${details}                                                      
             </div> 	           
         </li>
-        `);           
-        $("#deathsWiki").append($listItem);       
+        `);
+        $("#deathsWiki").append($listItem);
     });
-  
+
 }
 
-function populateTrendingNews(data){
-    $("#qree").html(``);   
+// Trending News
+function populateTrendingNews(data) {
+    $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Trending News</h4>`);
-    $("#qree").append($listItem); 
-    var count=1;
+    $("#qree").append($listItem);
+    var count = 1;
     $.each(data, function (k, v) {
         var unixtime = v.created;
         var currTime = Date.now();
@@ -489,12 +587,12 @@ function populateTrendingNews(data){
         } else {
             timediff = Math.round(timediff / 60 / 60) + " hours ago";
         }
-         try{
+        try {
             var { hostname } = new URL(v.link);
-        }catch(err){
+        } catch (err) {
             console.error(v.link);
         }
-        let thumbnail = v.thumbnail ? `<img src="${v.thumbnail}" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgError(this)' />` : `<img src="https://icon.horse/icon/${hostname.replace("www.", "")}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-2 rounded" onerror='imgError(this)' />`               
+        let thumbnail = v.thumbnail ? `<img src="${v.thumbnail}" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgErrorloadicon(this,"${hostname}")'  />` : `<img src="https://icon.horse/icon/${hostname.replace("www.", "")}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-2 rounded" onerror='imgError(this)' />`
         var $listItem = $(`                    
         <li class="list-group-item border-bottom mb-1 py-4"> 
             <div class="row">                
@@ -540,31 +638,34 @@ function populateTrendingNews(data){
     });
 }
 
-function populateTopNews(data){  
+// Top News
+function populateTopNews(data) {
     $("#loadertopNewsSection").addClass("d-flex align-items-center").show();
     $("#qree").html("");
     var count = 0
-    $.each(data, function (k, v) {       
-        try { 
+    $.each(data, function (k, v) {
+        try {
             var { hostname } = new URL(v.link);
-            let imgsrc = v.media ? v.media : ``          
+            let imgsrc = v.media ? v.media : ``
             var $listItem = $(`                    
             <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>      
-                    <p class="small fw-bold mb-0"><span class="text-yellow">${hostname}</span></p>
-                        <details>
-                            <summary><h6 class="mt-0 fw-bold">${v.title}</h6><br>                            
-                            </summary>  
-                            <p class="small fw-bold mb-0"><span class="text-main">${v.date}</span></p>                           
-                            <p class="mt-1 small">${v.excerpt}</p>
-                            <p class="mt-1 small"><a href="#detailedHomeNews" onclick="javascript:populateDetails(${k})">Read full article</a></p>
-                        </details>                   
+                        <p class="small fw-bold mb-0"><span class="text-yellow">${hostname}</span></p>
+                        <h6 class="mt-0 fw-bold">${v.title}</h6>
+                        <p class="smaller fw-bold mb-0"><span class="text-main">${v.date}</span></p>
                     </div>
                     <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgError(this)' />
                 </div>
+                <p class="mt-1 small">${v.excerpt}</p> 
+                <div>
+                    <details>
+                        <summary>Read Full article</summary>
+                        
+                    </details>  
+                </div>
             </li>
-            `);           
+            `);
             $("#qree").append($listItem);
         } catch (err) {
             // console.log(v.link, err);
@@ -573,30 +674,12 @@ function populateTopNews(data){
     $("#loadertopNewsSection").removeClass("d-flex align-items-center").hide();
 }
 
-function populateDetails(k) {
-    v = getLocalStorage("TopNews")[k]
-    $("#qree").html(``);
-    var { hostname } = new URL(v.link);
-    var $listItem = $(`
-                    <li class="list-group-item border-bottom bg-light py-4 mb-1">
-                        <div class="row">                    
-                            <div class="col-12">                                
-                                <p class="smaller fw-bold mb-0"><span class="text-yellow">${hostname}</span>, <span class="text-main">${v.date}</span></p> 
-                               <h5 class="mt-0 fw-bold">${v.title}</h5>
-                                <p class="mt-1 small">${v.content}</p>
-                            </div>                   
-                        </div>
-                    </li>                              
-                    `);
-    $("#qree").append($listItem);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function populateNearbyNews(data){
+// Nearby News
+function populateNearbyNews(data) {
     $("#qree").html("");
     let imgsrc0 = data.items[0].banner_image ? data.items[0].banner_image : ``
     let imgsrc1 = data.items[1].banner_image ? data.items[1].banner_image : ``
-    let imgsrc2 = data.items[2].banner_image ? data.items[2].banner_image : ``    
+    let imgsrc2 = data.items[2].banner_image ? data.items[2].banner_image : ``
     var $listItem = $(`                    
                 <li class="list-group-item border-bottom py-4 bg-light mb-1">   
                     <div class="card" style="width:100%;">
@@ -650,17 +733,18 @@ function populateNearbyNews(data){
         $listItem.on("click", function (e) {
             window.open(v.url, '_blank');
         });
-        
+
         $("#qree").append($listItem);
     })
 }
 
-function populateTrendingPosts(data){
+// Trending Posts
+function populateTrendingPosts(data) {
     $("#qree").html("");
-    $.each(data, function (k, v) {       
-        try {            
-                    
-            let imgsrc = v.image ? v.image : ``          
+    $.each(data, function (k, v) {
+        try {
+
+            let imgsrc = v.image ? v.image : ``
             var $listItem = $(`                    
             <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
@@ -674,22 +758,23 @@ function populateTrendingPosts(data){
                 <p class="mt-1 small"><a href="#detailedHomeNews" onclick="javascript:populateWPDetails(${k})">Read full article</a></p>
 
             </li>
-            `);           
+            `);
             $("#qree").append($listItem);
         } catch (err) {
             // console.log(v.link, err);
         }
-    });        
+    });
     $("body").css({ "opacity": "1" });
-    $("body").css({"cursor": ""});
+    $("body").css({ "cursor": "" });
     $("#qree").focus();
 }
 
-function populateLongReads(data){
+// Long Reads
+function populateLongReads(data) {
     $("#qree").html("");
-    $.each(data, function (k, v) {       
-        try {            
-            let imgsrc = v.image ? v.image : ``          
+    $.each(data, function (k, v) {
+        try {
+            let imgsrc = v.image ? v.image : ``
             var $listItem = $(`                    
             <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
@@ -703,36 +788,19 @@ function populateLongReads(data){
                 <p class="mt-1 small"><a href="#detailedHomeNews" onclick="javascript:populateWPDetails(${k})">Read full article</a></p>
 
             </li>
-            `);           
+            `);
             $("#qree").append($listItem);
         } catch (err) {
             // console.log(v.link, err);
         }
-    });        
+    });
     $("body").css({ "opacity": "1" });
-    $("body").css({"cursor": ""});
+    $("body").css({ "cursor": "" });
     $("#qree").focus();
 }
 
-function populateWPDetails(v) {
-    v = getLocalStorage("LongReads")[v]
-    $("#qree").html(``);
-    var $listItem = $(`
-                    <li class="list-group-item border-bottom bg-light py-4 mb-1">
-                        <div class="row">                    
-                            <div class="col-12">                                
-                                <p class="small">${v.date}</p>
-                                <h5>${v.title}</h5>
-                                <p>${v.content}</p>
-                            </div>                   
-                        </div>
-                    </li>                              
-                    `);
-    $("#qree").append($listItem);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function populateStreams(data){
+// Trending Streams
+function populateStreams(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-2 mb-4 fw-bold text-main ms-2">Trending Movies & Shows</h4>`);
     $("#qree").append($listItem);
@@ -769,9 +837,9 @@ function populateStreams(data){
                 <img src="https://img.reelgood.com/content/movie/${v.id}/poster-342.jpg" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgError(this)' />
             </div>
         </li>
-        `);   
-    $("#streamMovies").append($listItem);
-    }); 
+        `);
+        $("#streamMovies").append($listItem);
+    });
     $.each(data[0], function (k, v) {
         var $listItem = $(`                    
         <li class="list-group-item border-0 border-bottom py-4 bg-light mb-1">                                        
@@ -791,47 +859,49 @@ function populateStreams(data){
                 <img src="https://img.reelgood.com/content/show/${v.id}/poster-342.jpg" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgError(this)' />
             </div>
         </li>
-        `);   
-    $("#streamShows").append($listItem);
+        `);
+        $("#streamShows").append($listItem);
     });
 }
 
-function populateImagery(data){    
+// Trending News Imagery
+function populateImagery(data) {
     $("#qree").html("");
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Trending News Imagery</h4>`);
     $("#qree").append($listItem);
     $.each(data, function (k, v) {
-        var details= "";
+        var details = "";
         var count = 1;
-        $.each(v.imageweburls, function(i,j){
+        $.each(v.imageweburls, function (i, j) {
             details += `<a href="${j}">${count}</a> `;
             count++;
-        }); 
+        });
         var $listItem = $(`                    
         <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>             
                     Seen on <a href="${v.sourcearticleurl}">${new URL(v.sourcearticleurl).hostname}</a> and 
                         <span class="fw-bold text-main">${v.imagewebcount}</span> other websites.
-                        <p class="mt-0"><span class="fw-bold text-yellow">Top Links</span>: ${details}</p>  
+                        <p class="mt-0"><span class="fw-bold text-yellow">Top Links</span> ${details}</p>  
                 </div>
                 <img src="${v.imageurl}" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgError(this)' />
             </div>
         </li>
-        `);   
-    $("#qree").append($listItem);
-    });   
+        `);
+        $("#qree").append($listItem);
+    });
 }
 
-function populateTrendingImages(data){    
-    $("#qree").html(``);   
+// Trending Social Media Imagery
+function populateTrendingImages(data) {
+    $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Trending Images</h4>`);
-    $("#qree").append($listItem); 
-    var count=1;
-    $.each(data, function (k, v) {       
-        let thumbnail = v.thumbnail ? v.thumbnail : `` 
-       
-         var $listItem = $(`                    
+    $("#qree").append($listItem);
+    var count = 1;
+    $.each(data, function (k, v) {
+        let thumbnail = v.thumbnail ? v.thumbnail : ``
+
+        var $listItem = $(`                    
                         <li class="list-group-item border-bottom mb-1 py-4"> 
                             <div class="card" style="width:100%;">
                                 <img src="${thumbnail}" class="card-img-top" alt="" onerror='imgParentError(this)'>
@@ -842,8 +912,8 @@ function populateTrendingImages(data){
                             </div> 
                         </li>
                         `);
-        ;   
-         //    https://preview.redd.it/51p5ijus3y881.png?width=3384&format=png&auto=webp&s=e1659e2c75773633e5c5feab28078e2c71e3266e
+        ;
+        //    https://preview.redd.it/51p5ijus3y881.png?width=3384&format=png&auto=webp&s=e1659e2c75773633e5c5feab28078e2c71e3266e
         /* var $listItem = $(`                    
                         <li class="list-group-item border-bottom mb-1 py-4"> 
                             <div class="d-flex gap-2 w-100 justify-content-between">
@@ -860,38 +930,16 @@ function populateTrendingImages(data){
     });
 }
 
-function imgParentError(image) {
-    $(image).parent().parent().hide(); 
- }
- function getWPORGFeaturedMediaURL(id){
-    return new Promise((resolve, reject)=>{
-        try{
-            urls = ["id"]
-            async.mapLimit(urls, 1, async function (url) {
-                try {
-                    const response = await fetch(url);
-                    return response.json()
-                } catch (err) {
-                    resolve({})
-                }
-            }, (err, results) => {
-                response = results[0].source_url;
-                resolve(response)
-            })
-        }catch(err){reject(err)}        
-    })  
-    
-}
-
-function populateWeather(data){
+// Your Weather
+function populateWeather(data) {
     $("#qree").html("");
     var options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
     var today = new Date();
-    var date = today.toLocaleDateString("en-GB", options)   
+    var date = today.toLocaleDateString("en-GB", options)
     var $listItem = $(`
         <p class="fw-bold mt-1 text-main">${date}</p>         
     `);
-    $("#qree").append($listItem);  
+    $("#qree").append($listItem);
     var $listItem = $(`                    
     <li class="list-group-item border-1 rounded pt-4 pb-1 bg-light mb-1">
         <div class="d-flex gap-0 w-100 justify-content-between">
@@ -932,17 +980,16 @@ function populateWeather(data){
             </div>           
         </div>
     </li>
-    `);   
-    $("#qree").append($listItem);   
-    populateWeatherDetails(data)
+    `);
+    $("#qree").append($listItem);
+    populateWeatherDetails(data);
 }
-
-function populateWeatherDetails(data){
+function populateWeatherDetails(data) {
     var cardbody = ""
-    $.each(data.hourly.data.slice(0,12), function(k,v){
+    $.each(data.hourly.data.slice(0, 12), function (k, v) {
         var date = new Date(v.time * 1000);
-        var hour =`${date.getHours()}:00`;
-        var humidity = `${v.humidity*100}%`;
+        var hour = `${date.getHours()}:00`;
+        var humidity = `${v.humidity * 100}%`;
         var wind = `${v.windSpeed}`;
         var temp = `${Math.round((((v.temperature) - 32) * 5 / 9))} &degC`;
         var icon = `https://duckduckgo.com/assets/weather/icons/${v.icon}.svg`
@@ -950,7 +997,7 @@ function populateWeatherDetails(data){
             <div class="col mb-4 bg-light">${hour}<br><img src="${icon}" alt="" width="32" height:"32"><br><strong>${temp}</strong></div>       
         `);
         // if(!isEven(k)){
-           
+
         // }        
     });
     $("#qree").append(`
@@ -972,10 +1019,10 @@ function populateWeatherDetails(data){
         </div>
     </div>
     `);
-    cardbody ="";
-    $.each(data.daily.data, function(k,v){         
+    cardbody = "";
+    $.each(data.daily.data, function (k, v) {
         var date = new Date(v.time * 1000);
-        date  =`${date.getDate()+1}/${date.getMonth()+1}`;       
+        date = `${date.getDate() + 1}/${date.getMonth() + 1}`;
         var tempMax = `${Math.round((((v.temperatureMax) - 32) * 5 / 9))}&degC`;
         var tempMin = `${Math.round((((v.temperatureMin) - 32) * 5 / 9))}&degC`;
         var icon = `https://duckduckgo.com/assets/weather/icons/${v.icon}.svg`
@@ -983,7 +1030,7 @@ function populateWeatherDetails(data){
             <div class="col mb-4 bg-light">${date}<br><img src="${icon}" alt="" width="32" height:"32"><br><strong>${tempMax}</strong><br>${tempMin}</div>       
         `);
         // if(!isEven(k)){
-           
+
         // }        
     });
     $("#qree").append(`
@@ -1007,14 +1054,15 @@ function populateWeatherDetails(data){
     `);
 }
 
-function populateTrendingLocations(data){
+// Trending Locations
+function populateTrendingLocations(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-2 mb-2 fw-bold text-main ms-2">Trending Locations</h4>`);
     $("#qree").append($listItem);
     $.each(data, function (k, v) {
         var $listItem = $(`<h5 class="mt-4 mb-2 fw-bold text-main ms-2">${v.location}</h5>`);
         $("#qree").append($listItem);
-        $.each(v.items.slice(0,5),function(k,v){
+        $.each(v.items.slice(0, 5), function (k, v) {
             var { hostname } = new URL(v.url);
             var $listItem = $(`                    
             <li class="list-group-item border-bottom mb-1 py-4"> 
@@ -1032,34 +1080,34 @@ function populateTrendingLocations(data){
                     </div>
                 </div>
             </li>
-            `);          
+            `);
             $listItem.on("click", function (e) {
                 window.open(v.url, '_blank');
             });
-            
+
             $("#qree").append($listItem);
         })
-        
+
     })
 }
 
+// Trending People
 function populateTrendingPeople(data) {
+    // console.log(data);
     $("#qree").html("");
     var iHtml = ""
-    $.each(data.slice(0, 50), function (k, v) {
-        if (v.name !== "Also Read") {
-            var details = ``;
-            $.each(v.links.slice(1), function (k, v) {
-                details += `<div><details><summary>${v.title}</summary>${v.description}<a href="${v.link}">source</a></details></div>`
-            });
+    $.each(data.slice(0, 100), function (k, v) {
+        if (v.name == "Also Read" || v.name == "Prophet Muhammad") {
+            //do nothing
+        } else {
             iHtml += `   
-                <div class="col">
-                    <figure id="fig${k}" style="cursor:pointer" onclick="populateNewsResults('${v.name}')">               
-                        <img src="https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap-1&?image=${v.id}" class="flex-shrink-0 sqimg rounded" width="64" height="64" alt="" onerror='imgErrorPeople(${k},"${v.name}")'>                
-                        <figcaption class="text-black small mt-0 fw-bold">${v.name}</figcaption>
-                    </figure>
-                </div>
-                      `;
+            <div class="col">
+                <figure id="fig${k}" style="cursor:pointer" onclick="populateNewsResults('${v.name}')">               
+                    <img src="https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap-1&?image=${v.id}" class="flex-shrink-0 sqimg rounded" width="64" height="64" alt="" onerror='imgErrorPeople(${k},"${v.name}")'>                
+                    <figcaption class="text-black small mt-0 fw-bold">${v.name}</figcaption>
+                </figure>
+            </div>
+                  `;
         }
     });
     $("#qree").html(`<div class="container bg-light mt-1" style="overflow-x: scroll; scrollbar-width: thin;">
@@ -1078,20 +1126,9 @@ function populateTrendingPeople(data) {
                         </div>
                     </div>
                     `);
-    populateNewsResults(data[0].name)
+    populateNewsResults(data[0].name);
 }
-
-function imgErrorPeople(k, name) {  
-   $(`#fig${k}`).html(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person border-1" viewBox="0 0 16 16">
-            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-        </svg>
-        <figcaption class="text-black small mt-0 fw-bold">${name}</figcaption>
-        `);
-    // console.clear();
- }
-
-function populateNewsResults(name){
+function populateNewsResults(name) {
     $("#trendsDetails").html(``);
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">${name}</h4>`);
     $("#trendsDetails").append($listItem);
@@ -1113,20 +1150,21 @@ function populateNewsResults(name){
     })
 }
 
-function populateTrendingQuotes(data){
+// Trending Quotes
+function populateTrendingQuotes(data) {
     $("#qree").html("");
     $.each(data, function (k, v) {
         var $listItem = $(` 
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
-                <div class="d-flex gap-2 w-100 justify-content-between">
+            <li class="list-group-item border-bottom py-4 bg-light mb-1"> 
+             <p class="small"><a href="${v.links[0].link}">${v.links[0].title}</a></p>                                       
+                <div class="d-flex gap-2 mt-1 w-100 justify-content-between">
                     <div>
-                        <figcaption class="blockquote-footer">
-                           <cite title="${v.whoName}" class="text-main fw-bold">${v.whoName} ${v.verb}</cite> 
-                        </figcaption>
                         <blockquote class="blockquote">
-                            <p class="smaller">${v.quote}</p>
-                        </blockquote>
-                        <p class="small"> in news story <i><a href="${v.links[0].link}">${v.links[0].title}</a></p>
+                            <p class="smaller text-dark">${v.quote}</p>
+                        </blockquote>                                                   
+                        <figcaption class="blockquote-footer">
+                            <cite title="${v.whoName}" class="text-main fw-bold">${v.verb} ${v.whoName}</cite>
+                        </figcaption>                        
                     </div>
                     <img src="https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap-1&?image=${v.who}" class="flex-shrink-0 sqimg rounded" width="64" height="64" alt="" onerror='imgError(this)'>
                 </div>                
@@ -1136,12 +1174,13 @@ function populateTrendingQuotes(data){
     })
 }
 
-function populateHashtags(data){
+// Trending Hashtags
+function populateHashtags(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2"Trending Hashtags</h4>`);
     $("#qree").append($listItem);
     $.each(data, function (k, v) {
-       let link  = v.name.includes("#") ? `%23${v.name.replace("#","")}` : v.name
+        let link = v.name.includes("#") ? `%23${v.name.replace("#", "")}` : v.name
         var $listItem = $(` 
             <li class="list-group-item border-bottom py-4 bg-light mb-1">
                 <h6 class="mb-0 mt-0">${v.name}</h6>
@@ -1153,8 +1192,8 @@ function populateHashtags(data){
     })
 }
 
-
-function populateCB(data){
+// Trending Startups
+function populateCB(data) {
     $("#qree").html(``);
     var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Trending Companies, Acquisitions, Fundings, and Events</h4>`);
     $("#qree").append($listItem);
@@ -1182,7 +1221,7 @@ function populateCB(data){
     `);
     $("#qree").append($listItem);
     $.each(data.trending, function (k, v) {
-        v = v.entity.properties;       
+        v = v.entity.properties;
         var $listItem = $(`
                         <li class="list-group-item border-0 border-bottom py-2 bg-light mb-1" >  
                             <div class="d-flex gap-2 w-100 justify-content-between">
@@ -1200,9 +1239,9 @@ function populateCB(data){
         v = v.properties;
         pricetext = ""
         // console.log(v.price);
-        if(v.price == 0){
+        if (v.price == 0) {
             pricetext = "for an undisclosed amount."
-        } else{
+        } else {
             pricetext = `for <span class="fw-bold">USD ${new Intl.NumberFormat('en-GB', { maximumSignificantDigits: 3 }).format(v.price.value_usd)}</span>.`;
         }
         var $listItem = $(`
@@ -1215,16 +1254,16 @@ function populateCB(data){
     });
     $.each(data.funding_rounds.entities, function (k, v) {
         v = v.properties;
-        pricetext = ""       
-        if(v.money_raised == 0){
+        pricetext = ""
+        if (v.money_raised == 0) {
             pricetext = "raised an undisclosed amount."
-        } else{				
+        } else {
             pricetext = `raised <span class="fw-bold">USD ${new Intl.NumberFormat('en-GB', { maximumSignificantDigits: 3 }).format(v.money_raised.value_usd)}</span>.`;
         }
         var $listItem = $(`
                         <li class="list-group-item border-bottom py-4 bg-light mb-1">									
                             <div><p class="mb-0 text-muted small">${v.announced_on}</p>
-                            <p class="mb-0 small">Led by <a href="#" onclick="javascript:front.send('get-org','${v.lead_investor_identifiers[0].permalink}');">${v.lead_investor_identifiers[0].value}</a>, <a href="#" onclick="javascript:front.send('get-org','${v.funded_organization_identifier.permalink}');">${v.funded_organization_identifier.value}</a> ${pricetext} in a ${v.investment_type.replace("_"," ").toUpperCase()} funding.</p></div>												
+                            <p class="mb-0 small">Led by <a href="#" onclick="javascript:front.send('get-org','${v.lead_investor_identifiers[0].permalink}');">${v.lead_investor_identifiers[0].value}</a>, <a href="#" onclick="javascript:front.send('get-org','${v.funded_organization_identifier.permalink}');">${v.funded_organization_identifier.value}</a> ${pricetext} in a ${v.investment_type.replace("_", " ").toUpperCase()} funding.</p></div>												
                         </li>
                         `);
         $("#Fundings").append($listItem);
@@ -1239,5 +1278,88 @@ function populateCB(data){
                         </li>
                         `);
         $("#EventsCB").append($listItem);
+    });
+}
+
+// Trending Videos
+function populateYT(data) {
+    $("#qree").html(``);
+    var $listItem = $(`<h4 class="mt-4 mt-2 fw-bold text-main ms-2">Trending Videos</h4>`);
+    $("#qree").append($listItem);
+    $("#qree").append(`
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="trending-tab" data-bs-toggle="tab" data-bs-target="#trending" type="button" role="tab" aria-controls="trending" aria-selected="false">Trending</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="mv-tab" data-bs-toggle="tab" data-bs-target="#mv" type="button" role="tab" aria-controls="mv" aria-selected="true">Most Viewed</button>
+        </li>               
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="trending" role="tabpanel" aria-labelledby="trending-tab"></div>
+        <div class="tab-pane fade" id="mv" role="tabpanel" aria-labelledby="mv-tab"></div>      
+    </div>
+    `);
+    $.each(data.trending.slice(0, 50), function (k, v) {
+        var $listItem = $(`
+        <li class="list-group-item border-bottom py-2 bg-light mb-1" style="cursor:pointer" id="${k}-hour">               
+            <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="ratio ratio-16x9 video-wrapper">
+                    <lite-youtube videoid="${v}"></lite-youtube>                              
+                </div>                    
+            </div>	
+            <div>
+            </div>
+        </li>
+        `);
+        $("#trending").append($listItem);
+    })
+    $.each(data.mostviewed.slice(0, 50), function (k, v) {
+        var $listItem = $(`
+        <li class="list-group-item border-bottom py-2 bg-light mb-1" style="cursor:pointer" id="${k}-hour">               
+            <div class="d-flex gap-2 w-100 justify-content-between">
+                <div class="ratio ratio-16x9 video-wrapper">
+                    <lite-youtube videoid="${v}"></lite-youtube>                              
+                </div>                    
+            </div>	
+            <div>
+            </div>
+        </li>
+        `);
+        $("#mv").append($listItem);
+    })
+}
+
+// Trending Stocks
+function populateStocks(data) {
+    $("#qree").html(``);
+    var $listItem = $(`<h4 class="mt-4 mt-2 fw-bold text-main ms-2">Trending Stocks</h4>`);
+    $("#qree").append($listItem);
+    $.each(data[0].results.slice(1), function (k, v) {
+        let imgsrc = v.imageUrl ? v.imageUrl : ``
+        let summary = v.summary ? v.summary : ``
+        let details = v.companies[0].livePriceDto ? v.companies[0].livePriceDto : ``
+        let companyName = v.companies[0].companyName ? v.companies[0].companyName : ``
+        let nseScriptCode = v.companies[0].nseScripCode ? v.companies[0].nseScripCode : ``
+        let daychangeicon = details.dayChangePerc > 0 ? `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="me-0 text-success bi bi-arrow-up-short" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+      </svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="text-danger bi bi-arrow-down-short me-0" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
+    </svg>`
+        var $listItem = $(`
+            <li class="list-group-item border-bottom py-4 mb-1 bg-light" style="cursor:pointer" id="${k}-stocks">
+                <div class="small fw-bold">${companyName} (${nseScriptCode}) ${daychangeicon} ${details.dayChangePerc.toFixed(2)}%</div>                      
+                <div><p class="mb-4 small"><strong>Open</strong>: ${details.open}, <strong>High</strong>: ${details.high}, <strong>Low</strong>: ${details.low},<strong>Close</strong>: ${details.close}</p></div>
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div>
+                        <p class="mb-0 small fw-bold">${v.title}</p>
+                        <p class="mb-2 small">${summary.slice(0, 100)}...</p>
+                    </div>
+                    <img src="${imgsrc}" alt="" width="64" height="64" class="sqimg mt-1" onerror='imgError(this)'>
+                </div>	
+                <div><span class="small opacity-50 text-nowrap">Source: ${v.source}</span></div>
+            </li>
+            `);
+        $("#qree").append($listItem);
     });
 }
