@@ -5,7 +5,7 @@ function populateDetails(k) {
     $("#qree").html(``);
     var { hostname } = new URL(v.link);
     var $listItem = $(`
-                    <li class="list-group-item border-bottom bg-light py-4 mb-1">
+                    <li class="list-group-item border-bottom bg-dark text-white  py-4 mb-1">
                         <div class="row">                    
                             <div class="col-12">                                
                                 <p class="smaller fw-bold mb-0"><span class="text-yellow">${hostname}</span>, <span class="text-main">${v.date}</span></p> 
@@ -22,7 +22,7 @@ function populateWPDetails(v) {
     v = getLocalStorage("LongReads")[v]
     $("#qree").html(``);
     var $listItem = $(`
-                    <li class="list-group-item border-bottom bg-light py-4 mb-1">
+                    <li class="list-group-item border-bottom bg-dark text-white  py-4 mb-1">
                         <div class="row">                    
                             <div class="col-12">                                
                                 <p class="small">${v.date}</p>
@@ -62,7 +62,7 @@ function imgErrorPeople(k, name) {
          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-person border-1" viewBox="0 0 16 16">
              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
          </svg>
-         <figcaption class="text-black small mt-0 fw-bold">${name}</figcaption>
+         <figcaption class="text-white small mt-0 fw-bold">${name}</figcaption>
          `);
     // console.clear();
 }
@@ -80,7 +80,7 @@ function populateHomeTopNews(data) {
         let imgsrc1 = data[1].thumbnail ? data[1].thumbnail : ``
         let imgsrc2 = data[2].thumbnail ? data[2].thumbnail : ``
         var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">   
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">   
                 <div class="card" style="width:100%;">
                     <img src="${imgsrc0}" class="card-img-top" alt="">
                     <div class="card-body">                    
@@ -116,7 +116,7 @@ function populateHomeTopNews(data) {
         $.each(data.slice(3), function (k, v) {
             let imgsrc = v.thumbnail ? v.thumbnail : ``
             var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>                               
                         <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6> 
@@ -145,10 +145,10 @@ function populateHomeTopStoriesfromGoogle(data) {
         var {hostname} =  new URL(data[0].alturl);
         let imgsrc0 = data[0].visual ? data[0].visual : data[0].alt_visual       
         var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">   
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">   
                 <div class="card" style="width:100%;">
                     <img src="${imgsrc0}" class="card-img-top" alt="">
-                    <div class="card-body">  
+                    <div class="card-body bg-dark text-white">  
                         <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${data[0].alturl}" class="text-yellow underline" target="_blank">${hostname}</a></p>                  
                         <h5 class="mt-0 mb-0 fw-bold">${data[0].title}</h5>  
                         <details class="mt-2">
@@ -164,7 +164,7 @@ function populateHomeTopStoriesfromGoogle(data) {
             let imgsrc = v.visual ? v.visual : v.alt_visual
             var { hostname } = new URL(v.alturl)
             var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>       
                         <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.alturl}" class="text-yellow underline" target="_blank">${hostname}</a></p>                         
@@ -189,6 +189,7 @@ function populateHomeTopStoriesfromGoogle(data) {
     }
     // $('li:contains("View Full")').remove();
     // $('li > a:contains("View Full")').remove();
+    $('strong > a:contains("View Full coverage on Google News")').remove();    
     $('li > strong > a:contains("View Full")').remove();
     $('li > strong').remove();
     $('ol li:last-child').remove();
@@ -196,7 +197,7 @@ function populateHomeTopStoriesfromGoogle(data) {
 function populateHomeTrendingNews(results) {
     arr = []
     var $listItem = $(`
-            <li class="bg-light mb-1">        
+            <li class="bg-dark text-white  mb-1">        
                 <div class="card mt-2" style="width:100%;">
                 <div class="card-header bg-white">
                     <div class="row">
@@ -279,7 +280,7 @@ function populateWiki(data) {
     $.each(mostread, function (k, v) {
         let imgsrc = v.thumbnail ? v.thumbnail.source : ``
         var $listItem = $(`                    
-        <li class="list-group-item border-0 border-bottom py-4 bg-light mb-1" >                                        
+        <li class="list-group-item border-0 border-bottom py-4 bg-dark text-white  mb-1" >                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
                     <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6>
@@ -302,11 +303,11 @@ function populateWiki(data) {
     var image = data.image
     let imgsrc = image.thumbnail ? image.thumbnail : ``
     var $listItem = $(`                    
-                    <li class="bg-light mt-4 mb-1">   
+                    <li class="bg-dark text-white list-group-item  mt-4 mb-1">   
                         <div class="card" style="width:100%;">
-                            <div class="card-header text-yellow"><h5 class="fw-bold">Featured Image</h5></div>
+                            <div class="card-header text-yellow bg-dark"><h5 class="fw-bold">Featured Image</h5></div>
                             <img src="${imgsrc}" class="card-img-top" alt="" onerror='imgError(this)' />
-                            <div class="card-body"> 
+                            <div class="card-body text-white bg-dark"> 
                                 <h5 class="mt-0 fw-bold">${image.description}</h5> 
                                 <p class="mt-1 mb-0 small text-yellow fw-bold">Artist: ${image.artist}</p>
                             </details>         
@@ -318,11 +319,11 @@ function populateWiki(data) {
     var tfa = data.tfa
     let taimgsrc = tfa.thumbnail ? tfa.thumbnail : ``
     var $listItem = $(`                    
-                    <li class="bg-light mb-1">   
+                    <li class="bg-dark text-white list-group-item mb-1">   
                         <div class="card mt-4" style="width:100%;">
-                            <div class="card-header text-yellow"><h5 class="fw-bold">Featured Article</h5></div>
+                            <div class="card-header text-yellow bg-dark"><h5 class="fw-bold">Featured Article</h5></div>
                             <img src="${taimgsrc}" class="card-img-top" alt="" onerror='imgError(this)' />
-                            <div class="card-body"> 
+                            <div class="card-body text-white bg-dark"> 
                                 <h5 class="mt-0 fw-bold">${tfa.title}</h5> 
                                 <p class="mt-1 mb-0 small fw-bold">${tfa.content}</p>
                             </details>         
@@ -349,7 +350,7 @@ function populateWiki(data) {
         </div>`
         });
         var $listItem = $(`                    
-        <li class="list-group-item border-bottom py-4 bg-light mb-1" >                                        
+        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1" >                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
                     <p class="mb-0 mt-1 fw-bold text-yellow">${v.year}</p> 
@@ -375,7 +376,7 @@ function populateGoogleTrends(data) {
     $.each(data, function (k, v) {
         let imgsrc = v.image.imgUrl ? `<img src="http:${v.image.imgUrl}" alt="" width="96" height="96" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``
         var $listItem = $(`
-        <li class="list-group-item border-bottom py-4 bg-light mb-0" style="cursor:pointer"> 
+        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-0" style="cursor:pointer"> 
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>                                                                              
                         <details>
@@ -409,7 +410,7 @@ function populateEvents(data) {
     $("#qree").html("");
     for (const [key, value] of Object.entries(byCategory)) {
         var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1"> 
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1"> 
             <details>
                 <summary><h6 class="mt-0 fw-bold">${key}</h6></summary>
                 <ul class="list-group list-group-flush mt-2" id="${key.replaceAll(" ", "").replaceAll("(", "").replaceAll(")", "")}" style="max-width:calc(100vw - 10px);">
@@ -435,7 +436,7 @@ function populateEvents(data) {
             }
             try {
                 var $listItem = $(`                    
-                <li class="list-group-item border-bottom py-2 bg-light mb-1">                                        
+                <li class="list-group-item border-bottom py-2 bg-dark text-white  mb-1">                                        
                     <div class="d-flex gap-2 w-100 justify-content-between">
                         <div>
                             <p class="small fw-bold text-yellow mb-0">${timediff}</p>
@@ -487,7 +488,7 @@ function populateGoogleSearchTrends(data) {
         let imgsrc = v.image ? `<img src="${v.image}" alt="" width="96" height="96" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``
         let article0imgsrc = v.articles[0].image ? v.articles[0].image.imageUrl : ``
         var $listItem = $(`
-        <li class="list-group-item border-bottom py-4 bg-light mb-0" style="cursor:pointer"> 
+        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-0" style="cursor:pointer"> 
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>  
                         <p class="mb-0 mt-1 small">${v.formattedDate}</p>
@@ -564,7 +565,7 @@ function populateWikiEvents(data) {
         </div>`
         });
         var $listItem = $(`                    
-        <li class="list-group-item border-0 border-bottom py-4 bg-light mb-1" >                                        
+        <li class="list-group-item border-0 border-bottom py-4 bg-dark text-white  mb-1" >                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>                    
                     <details class="top-details" style="cursor:pointer"><summary><h6 class="mb-0 mt-0 fw-bold">${v.title}</h6>                
@@ -584,20 +585,20 @@ function populateWikiEvents(data) {
         var details = ""
         $.each(v.pages.slice(0, 1), function (i, j) {
             details += `<div class="d-flex gap-2 w-100 justify-content-between">
-                <div>
-                <p class="mb-0 mt-2 fw-bold text-yellow">${v.year}</p> 
-                <details class="top-details" style="cursor:pointer"><summary><h6 class="mb-0 mt-0 fw-bold">${j.title}</h6><br>
-                <p class="mb-0 mt-1 small fw-bold">${j.description}</p>                            
-                </summary>
-                <p class="mb-0 mt-1 small">${j.extract}</p>  
-                <p class="mb-0 mt-1 small"><a href="${j.link}" target="_blank">Read full article on Wikipedia</a></p>   
-                </details>                                                        
-            </div>
-            <img src="${j.thumbnail}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-0 rounded" onerror='imgError(this)' />
-        </div>`
-        });
+                            <div>
+                                <p class="mb-0 mt-2 fw-bold text-yellow">${v.year}</p> 
+                                <h6 class="mb-0 mt-0 fw-bold">${j.title}</h6>
+                                <p class="mb-0 mt-0 small fw-bold">${j.description}</p>  
+                            </div>
+                            <img src="${j.thumbnail}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-2 rounded" onerror='imgError(this)' />
+                        </div>
+                        <details class="top-details mt-2" style="cursor:pointer"><summary>Read more</summary>
+                            <p class="mb-0 mt-1 small">${j.extract}</p>  
+                            <p class="mb-0 mt-1 small"><a href="${j.link}" target="_blank">Read full article on Wikipedia</a></p>   
+                        </details>  
+                        `});
         var $listItem = $(`                    
-        <li class="list-group-item border-0 border-bottom py-2 bg-light mb-1" >                                        
+        <li class="list-group-item border-0 border-bottom py-2 bg-dark text-white  mb-1" >                                        
             <div>                    
                 ${details}                                                      
             </div> 	           
@@ -610,20 +611,20 @@ function populateWikiEvents(data) {
         var details = ""
         $.each(v.pages.slice(0, 1), function (i, j) {
             details += `<div class="d-flex gap-2 w-100 justify-content-between">
-                <div>
-                <p class="mb-0 mt-2 fw-bold text-yellow">${v.year}</p> 
-                <details class="top-details" style="cursor:pointer"><summary><h6 class="mb-0 mt-0 fw-bold">${j.title}</h6><br>
-                <p class="mb-0 mt-1 small fw-bold">${j.description}</p>                            
-                </summary>
-                <p class="mb-0 mt-1 small">${j.extract}</p>  
-                <p class="mb-0 mt-1 small"><a href="${j.link}" target="_blank">Read full article on Wikipedia</a></p>   
-                </details>                                                        
-            </div>
-            <img src="${j.thumbnail}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-0 rounded" onerror='imgError(this)' />
-        </div>`
-        });
+                            <div>
+                                <p class="mb-0 mt-2 fw-bold text-yellow">${v.year}</p> 
+                                <h6 class="mb-0 mt-0 fw-bold">${j.title}</h6>
+                                <p class="mb-0 mt-0 small fw-bold">${j.description}</p>  
+                            </div>
+                            <img src="${j.thumbnail}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-2 rounded" onerror='imgError(this)' />
+                        </div>
+                        <details class="top-details mt-2" style="cursor:pointer"><summary>Read more</summary>
+                            <p class="mb-0 mt-1 small">${j.extract}</p>  
+                            <p class="mb-0 mt-1 small"><a href="${j.link}" target="_blank">Read full article on Wikipedia</a></p>   
+                        </details>  
+                        `});
         var $listItem = $(`                    
-        <li class="list-group-item border-0 border-bottom py-2 bg-light mb-1" >                                        
+        <li class="list-group-item border-0 border-bottom py-2 bg-dark text-white  mb-1" >                                        
             <div>                    
                 ${details}                                                      
             </div> 	           
@@ -658,7 +659,7 @@ function populateTrendingNews(data) {
         }
         let thumbnail = v.thumbnail ? `<img src="${v.thumbnail}" alt="" width="96" height="96" class="flex-shrink-0 mt-2 sqimg rounded" onerror='imgErrorloadicon(this,"${hostname}")'  />` : `<img src="https://icon.horse/icon/${hostname.replace("www.", "")}" alt="" width="64" height="64" class="flex-shrink-0 sqimg mt-2 rounded" onerror='imgError(this)' />`
         var $listItem = $(`                    
-        <li class="list-group-item border-bottom mb-1 py-4"> 
+        <li class="list-group-item border-bottom mb-1 py-4 bg-dark text-white"> 
             <div class="row">                
                 <div class="col">
                     <div class="d-flex gap-2 w-100 justify-content-between">
@@ -693,7 +694,7 @@ function populateTopNews(data) {
             var { hostname } = new URL(v.link);
             let imgsrc = v.media ? v.media : ``
             var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>      
                         <p class="small fw-bold mb-0"><span class="text-yellow">${hostname}</span></p>
@@ -726,10 +727,10 @@ function populateNearbyNews(data) {
     let imgsrc1 = data.items[1].banner_image ? data.items[1].banner_image : ``
     let imgsrc2 = data.items[2].banner_image ? data.items[2].banner_image : ``
     var $listItem = $(`                    
-                <li class="list-group-item border-bottom py-4 bg-light mb-1">   
+                <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">   
                     <div class="card" style="width:100%;">
                         <img src="${imgsrc0}" class="card-img-top" alt="">
-                        <div class="card-body">
+                        <div class="card-body bg-dark text-white">
                             <p class="mb-0 mt-0 fw-bold text-main">${data.items[0].title.split(":")[0].split(",")[0]}</p>                    
                             <h5 class="mb-0 mt-0 fw-bold">${data.items[0].title.split(":")[1]}</h5>       
                             <a href="${data.items[0].url}" class="text-yellow underline text-truncate small">source</a>
@@ -739,7 +740,7 @@ function populateNearbyNews(data) {
                         <div class="col">
                             <div class="card h-100" style="width:100%;">
                                 <img src="${imgsrc1}" class="card-img-top" alt="">
-                                <div class="card-body">                            
+                                <div class="card-body bg-dark text-white">                            
                                     <p class="mb-0 mt-0 fw-bold text-main">${data.items[1].title.split(":")[0].split(",")[0]}</p>                    
                                     <h6 class="mb-0 mt-0 fw-bold">${data.items[1].title.split(":")[1]}</h6>       
                                     <a href="${data.items[1].url}" class="text-yellow underline text-truncate small">source</a>
@@ -749,7 +750,7 @@ function populateNearbyNews(data) {
                         <div class="col">
                             <div class="card h-100" style="width:100%;">
                                 <img src="${imgsrc2}" class="card-img-top" alt="">
-                                <div class="card-body">                             
+                                <div class="card-body bg-dark text-white">                             
                                     <p class="mb-0 mt-0 fw-bold text-main">${data.items[2].title.split(":")[0].split(",")[0]}</p>                    
                                     <h6 class="mb-0 mt-0 fw-bold">${data.items[2].title.split(":")[1]}</h6>       
                                     <a href="${data.items[2].url}" class="text-yellow underline text-truncate small">source</a>                   
@@ -763,7 +764,7 @@ function populateNearbyNews(data) {
     $.each(data.items.slice(3), function (k, v) {
         var { hostname } = new URL(v.url);
         var $listItem = $(`                    
-        <li class="list-group-item border-bottom py-4 bg-light mb-1" style="cursor:pointer">                                        
+        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1" style="cursor:pointer">                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
                     <p class="mb-0 mt-0 small fw-bold text-main">${v.title.split(":")[0].split(",")[0]}</p>                    
@@ -791,7 +792,7 @@ function populateTrendingPosts(data) {
 
             let imgsrc = v.image ? v.image : ``
             var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>   
                         <p class="mb-2 mt-0 small text-yellow fw-bold">${v.hostname}</p>
@@ -821,7 +822,7 @@ function populateLongReads(data) {
         try {
             let imgsrc = v.image ? v.image : ``
             var $listItem = $(`                    
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">                                        
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>   
                         <p class="mb-2 mt-0 small text-yellow fw-bold">${v.hostname}</p>
@@ -865,7 +866,7 @@ function populateStreams(data) {
     `);
     $.each(data[1], function (k, v) {
         var $listItem = $(`                    
-        <li class="list-group-item border-0 border-bottom py-4 bg-light mb-1">                                        
+        <li class="list-group-item border-0 border-bottom py-4 bg-dark text-white  mb-1">                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>    
                     <h6 class="mt-0 mb-0 fw-bold">${v.title}</h6> 
@@ -887,7 +888,7 @@ function populateStreams(data) {
     });
     $.each(data[0], function (k, v) {
         var $listItem = $(`                    
-        <li class="list-group-item border-0 border-bottom py-4 bg-light mb-1">                                        
+        <li class="list-group-item border-0 border-bottom py-4 bg-dark text-white  mb-1">                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>    
                     <h6 class="mt-0 mb-0 fw-bold">${v.title}</h6> 
@@ -922,7 +923,7 @@ function populateImagery(data) {
             count++;
         });
         var $listItem = $(`                    
-        <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">                                        
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>             
                     Seen on <a href="${v.sourcearticleurl}">${new URL(v.sourcearticleurl).hostname}</a> and 
@@ -945,12 +946,11 @@ function populateTrendingImages(data) {
     var count = 1;
     $.each(data, function (k, v) {
         let thumbnail = v.thumbnail ? v.thumbnail : ``
-
         var $listItem = $(`                    
-                        <li class="list-group-item border-bottom mb-1 py-4"> 
+                        <li class="list-group-item bg-dark text-white border-bottom mb-1 py-4"> 
                             <div class="card" style="width:100%;">
                                 <img src="${thumbnail}" class="card-img-top" alt="" onerror='imgParentError(this)'>
-                                <div class="card-body">                    
+                                <div class="card-body bg-dark text-white">                    
                                     <h6 class="mt-0 fw-bold">${v.title}</h6>  
                                     <p class="mt-0 fw-bold small text-yellow">credit: ${v.author}</h6>                     
                                 </div>
@@ -986,7 +986,7 @@ function populateWeather(data) {
     `);
     $("#qree").append($listItem);
     var $listItem = $(`                    
-    <li class="list-group-item border-1 rounded pt-4 pb-1 bg-light mb-1">
+    <li class="list-group-item border-1 rounded pt-4 pb-1 bg-dark text-white  mb-1">
         <div class="d-flex gap-0 w-100 justify-content-between">
             <div class="col ps-2 mt-1">
                 <h4 class="fw-bold mt-2"><span class="text-yellow">${Math.round((((data.currently.temperature) - 32) * 5 / 9))}&degC</span>, <span>${data.currently.summary}</span</h4>         
@@ -1004,7 +1004,7 @@ function populateWeather(data) {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wind" viewBox="0 0 16 16">
                         <path d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"/>
                     </svg>   
-                    <figcaption class="text-dark smaller mt-0 fw-bold">${data.currently.windSpeed}</figcaption>
+                    <figcaption class="text-white smaller mt-0 fw-bold">${data.currently.windSpeed}</figcaption>
                 </figure>
             </div>
             <div class="col">
@@ -1012,7 +1012,7 @@ function populateWeather(data) {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moisture" viewBox="0 0 16 16">
                         <path d="M13.5 0a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V7.5h-1.5a.5.5 0 0 0 0 1H15v2.75h-.5a.5.5 0 0 0 0 1h.5V15h-1.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5V.5a.5.5 0 0 0-.5-.5h-2zM7 1.5l.364-.343a.5.5 0 0 0-.728 0l-.002.002-.006.007-.022.023-.08.088a28.458 28.458 0 0 0-1.274 1.517c-.769.983-1.714 2.325-2.385 3.727C2.368 7.564 2 8.682 2 9.733 2 12.614 4.212 15 7 15s5-2.386 5-5.267c0-1.05-.368-2.169-.867-3.212-.671-1.402-1.616-2.744-2.385-3.727a28.458 28.458 0 0 0-1.354-1.605l-.022-.023-.006-.007-.002-.001L7 1.5zm0 0-.364-.343L7 1.5zm-.016.766L7 2.247l.016.019c.24.274.572.667.944 1.144.611.781 1.32 1.776 1.901 2.827H4.14c.58-1.051 1.29-2.046 1.9-2.827.373-.477.706-.87.945-1.144zM3 9.733c0-.755.244-1.612.638-2.496h6.724c.395.884.638 1.741.638 2.496C11 12.117 9.182 14 7 14s-4-1.883-4-4.267z"/>
                     </svg> 
-                    <figcaption class="text-dark smaller mt-0 fw-bold">${data.currently.humidity}</figcaption>
+                    <figcaption class="text-white smaller mt-0 fw-bold">${data.currently.humidity}</figcaption>
                 </figure>
             </div>
             <div class="col">
@@ -1020,7 +1020,7 @@ function populateWeather(data) {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-rain" viewBox="0 0 16 16">
                         <path d="M4.158 12.025a.5.5 0 0 1 .316.633l-.5 1.5a.5.5 0 0 1-.948-.316l.5-1.5a.5.5 0 0 1 .632-.317zm3 0a.5.5 0 0 1 .316.633l-1 3a.5.5 0 0 1-.948-.316l1-3a.5.5 0 0 1 .632-.317zm3 0a.5.5 0 0 1 .316.633l-.5 1.5a.5.5 0 0 1-.948-.316l.5-1.5a.5.5 0 0 1 .632-.317zm3 0a.5.5 0 0 1 .316.633l-1 3a.5.5 0 1 1-.948-.316l1-3a.5.5 0 0 1 .632-.317zm.247-6.998a5.001 5.001 0 0 0-9.499-1.004A3.5 3.5 0 1 0 3.5 11H13a3 3 0 0 0 .405-5.973zM8.5 2a4 4 0 0 1 3.976 3.555.5.5 0 0 0 .5.445H13a2 2 0 0 1 0 4H3.5a2.5 2.5 0 1 1 .605-4.926.5.5 0 0 0 .596-.329A4.002 4.002 0 0 1 8.5 2z"/>
                     </svg> 
-                    <figcaption class="text-dark smaller mt-0 fw-bold">${data.currently.precipProbability}%</figcaption>
+                    <figcaption class="text-white smaller mt-0 fw-bold">${data.currently.precipProbability}%</figcaption>
                 </figure>
             </div>           
         </div>
@@ -1039,7 +1039,7 @@ function populateWeatherDetails(data) {
         var temp = `${Math.round((((v.temperature) - 32) * 5 / 9))} &degC`;
         var icon = `https://duckduckgo.com/assets/weather/icons/${v.icon}.svg`
         cardbody = cardbody.concat(`        
-            <div class="col mb-4 bg-light">${hour}<br><img src="${icon}" alt="" width="32" height:"32"><br><strong>${temp}</strong></div>       
+            <div class="col mb-4 bg-dark text-white ">${hour}<br><img src="${icon}" alt="" width="32" height:"32"><br><strong>${temp}</strong></div>       
         `);
         // if(!isEven(k)){
 
@@ -1047,15 +1047,15 @@ function populateWeatherDetails(data) {
     });
     $("#qree").append(`
     <div class="col-12 mt-4">
-        <div class="card bg-light border">
-            <div class="card-header bg-light">                
+        <div class="card bg-dark text-white  border">
+            <div class="card-header bg-dark text-white ">                
                 <h5 class="my-0">Hourly Predictions</h5>
                 <p class="mt-0 fw-bold text-yellow">${data.hourly.summary}</p>
             </div>
-            <div class="card-body bg-light">                
-                <p class="card-text bg-light">
-                    <div class="container bg-light">
-                    <div class="row row-cols-3 bg-light">
+            <div class="card-body bg-dark text-white ">                
+                <p class="card-text bg-dark text-white ">
+                    <div class="container bg-dark text-white ">
+                    <div class="row row-cols-3 bg-dark text-white ">
                         ${cardbody}
                     </div>
                     </div>
@@ -1072,7 +1072,7 @@ function populateWeatherDetails(data) {
         var tempMin = `${Math.round((((v.temperatureMin) - 32) * 5 / 9))}&degC`;
         var icon = `https://duckduckgo.com/assets/weather/icons/${v.icon}.svg`
         cardbody = cardbody.concat(`        
-            <div class="col mb-4 bg-light">${date}<br><img src="${icon}" alt="" width="32" height:"32"><br><strong>${tempMax}</strong><br>${tempMin}</div>       
+            <div class="col mb-4 bg-dark text-white ">${date}<br><img src="${icon}" alt="" width="32" height:"32"><br><strong>${tempMax}</strong><br>${tempMin}</div>       
         `);
         // if(!isEven(k)){
 
@@ -1080,15 +1080,15 @@ function populateWeatherDetails(data) {
     });
     $("#qree").append(`
     <div class="col-12 mt-2 mx-auto">
-        <div class="card bg-light border">
-            <div class="card-header bg-light">                
+        <div class="card bg-dark text-white  border">
+            <div class="card-header bg-dark text-white ">                
                 <h5 class="my-0">Daily Predictions</h5>
                 <p class="mt-0 fw-bold text-yellow">${data.daily.summary}</p>
             </div>
-            <div class="card-body bg-light">                
+            <div class="card-body bg-dark text-white ">                
                 <p class="card-text">
                     <div class="container">
-                    <div class="row row-cols-3 bg-light">
+                    <div class="row row-cols-3 bg-dark text-white ">
                         ${cardbody}
                     </div>
                     </div>
@@ -1110,7 +1110,7 @@ function populateTrendingLocations(data) {
         $.each(v.items.slice(0, 5), function (k, v) {
             var { hostname } = new URL(v.url);
             var $listItem = $(`                    
-            <li class="list-group-item border-bottom mb-1 py-4"> 
+            <li class="list-group-item border-bottom bg-dark text-white mb-1 py-4"> 
                 <div class="row">                
                     <div class="col">
                         <div class="d-flex gap-2 w-100 justify-content-between">
@@ -1149,13 +1149,13 @@ function populateTrendingPeople(data) {
             <div class="col">
                 <figure id="fig${k}" style="cursor:pointer" onclick="populateNewsResults('${v.name}')">               
                     <img src="https://emm.newsbrief.eu/emmMap/tunnel?sid=emmMap-1&?image=${v.id}" class="flex-shrink-0 sqimg rounded" width="64" height="64" alt="" onerror='imgErrorPeople(${k},"${v.name}")'>                
-                    <figcaption class="text-black small mt-0 fw-bold">${v.name}</figcaption>
+                    <figcaption class="text-white small mt-0 fw-bold">${v.name}</figcaption>
                 </figure>
             </div>
                   `;
         }
     });
-    $("#qree").html(`<div class="container bg-light mt-1" style="overflow-x: scroll; scrollbar-width: thin;">
+    $("#qree").html(`<div class="container bg-dark text-white  mt-1" style="overflow-x: scroll; scrollbar-width: thin;">
                         <div class="row px-1">
                             <div class="col">
                                 <div class="row flex-nowrap menuItems">${iHtml}</div>
@@ -1180,7 +1180,7 @@ function populateNewsResults(name) {
     getSearchResultsGDELT(name).then(data => {
         $.each(data, function (k, v) {
             var $listItem = $(` 
-                <li class="list-group-item border-bottom py-4 bg-light mb-1">
+                <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">
                     <p class="small fw-bold mb-0"><span class="text-yellow">${new URL(v.url).hostname}</span></p>                                        
                     <div class="d-flex gap-2 w-100 justify-content-between">
                         <div>                               
@@ -1200,12 +1200,12 @@ function populateTrendingQuotes(data) {
     $("#qree").html("");
     $.each(data, function (k, v) {
         var $listItem = $(` 
-            <li class="list-group-item border-bottom py-4 bg-light mb-1"> 
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1"> 
              <p class="small"><a href="${v.links[0].link}">${v.links[0].title}</a></p>                                       
                 <div class="d-flex gap-2 mt-1 w-100 justify-content-between">
                     <div>
                         <blockquote class="blockquote">
-                            <p class="smaller text-dark">${v.quote}</p>
+                            <p class="smaller text-white">${v.quote}</p>
                         </blockquote>                                                   
                         <figcaption class="blockquote-footer">
                             <cite title="${v.whoName}" class="text-main fw-bold">${v.verb} ${v.whoName}</cite>
@@ -1222,12 +1222,12 @@ function populateTrendingQuotes(data) {
 // Trending Hashtags
 function populateHashtags(data) {
     $("#qree").html(``);
-    var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2"Trending Hashtags</h4>`);
+    var $listItem = $(`<h4 class="mt-4 fw-bold text-main ms-2">Trending Hashtags</h4>`);
     $("#qree").append($listItem);
     $.each(data, function (k, v) {
         let link = v.name.includes("#") ? `%23${v.name.replace("#", "")}` : v.name
         var $listItem = $(` 
-            <li class="list-group-item border-bottom py-4 bg-light mb-1">
+            <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">
                 <h6 class="mb-0 mt-0">${v.name}</h6>
                 <p class=" fw-bold mb-0"><span class="text-yellow">${new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(v.volume)}</span></p>
                 <p><a href="https://twitter.com/search?q=${link}&vertical=trends" target="_blank">See on twitter</a>
@@ -1268,7 +1268,7 @@ function populateCB(data) {
     $.each(data.trending, function (k, v) {
         v = v.entity.properties;
         var $listItem = $(`
-                        <li class="list-group-item border-0 border-bottom py-2 bg-light mb-1" >  
+                        <li class="list-group-item border-0 border-bottom py-2 bg-dark text-white  mb-1" >  
                             <div class="d-flex gap-2 w-100 justify-content-between">
                                 <div> 
                                     <h6 class="mb-0 mt-0 fw-bold text-main">${v.identifier.value}, ${v.location}</h6> 
@@ -1290,7 +1290,7 @@ function populateCB(data) {
             pricetext = `for <span class="fw-bold">USD ${new Intl.NumberFormat('en-GB', { maximumSignificantDigits: 3 }).format(v.price.value_usd)}</span>.`;
         }
         var $listItem = $(`
-                        <li class="list-group-item border-bottom py-4 bg-light mb-1">								
+                        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">								
                             <div><p class="mb-0 small text-main">${v.announced_on.value}</p>
                             <p class="mb-0"><a href="#" onclick="javascript:front.send('get-org','${v.acquirer_identifier.permalink}');">${v.acquirer_identifier.value}</a> acquired <a href="#" onclick="javascript:front.send('get-org','${v.acquiree_identifier.permalink}');">${v.acquiree_identifier.value}</a> ${pricetext}</p></div>												
                         </li>
@@ -1306,7 +1306,7 @@ function populateCB(data) {
             pricetext = `raised <span class="fw-bold">USD ${new Intl.NumberFormat('en-GB', { maximumSignificantDigits: 3 }).format(v.money_raised.value_usd)}</span>.`;
         }
         var $listItem = $(`
-                        <li class="list-group-item border-bottom py-4 bg-light mb-1">									
+                        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">									
                             <div><p class="mb-0 text-muted small">${v.announced_on}</p>
                             <p class="mb-0 small">Led by <a href="#" onclick="javascript:front.send('get-org','${v.lead_investor_identifiers[0].permalink}');">${v.lead_investor_identifiers[0].value}</a>, <a href="#" onclick="javascript:front.send('get-org','${v.funded_organization_identifier.permalink}');">${v.funded_organization_identifier.value}</a> ${pricetext} in a ${v.investment_type.replace("_", " ").toUpperCase()} funding.</p></div>												
                         </li>
@@ -1317,7 +1317,7 @@ function populateCB(data) {
         v = v.properties;
         pricetext = "";
         var $listItem = $(`
-                        <li class="list-group-item border-bottom py-4 bg-light mb-1">									
+                        <li class="list-group-item border-bottom py-4 bg-dark text-white  mb-1">									
                            <h6>${v.identifier.value} at ${v.location_identifiers[0].value} starts on 
                            <span class="fw-bold text-yellow">${v.starts_on}</span> and ends on <span class="fw-bold text-yellow">${v.ends_on}<span></h6>											
                         </li>
@@ -1347,7 +1347,7 @@ function populateYT(data) {
     `);
     $.each(data.trending.slice(0, 50), function (k, v) {
         var $listItem = $(`
-        <li class="list-group-item border-bottom py-2 bg-light mb-1" style="cursor:pointer" id="${k}-hour">               
+        <li class="list-group-item border-bottom py-2 bg-dark text-white  mb-1" style="cursor:pointer" id="${k}-hour">               
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div class="ratio ratio-16x9 video-wrapper">
                     <lite-youtube videoid="${v}"></lite-youtube>                              
@@ -1361,7 +1361,7 @@ function populateYT(data) {
     })
     $.each(data.mostviewed.slice(0, 50), function (k, v) {
         var $listItem = $(`
-        <li class="list-group-item border-bottom py-2 bg-light mb-1" style="cursor:pointer" id="${k}-hour">               
+        <li class="list-group-item border-bottom py-2 bg-dark text-white  mb-1" style="cursor:pointer" id="${k}-hour">               
             <div class="d-flex gap-2 w-100 justify-content-between">
                 <div class="ratio ratio-16x9 video-wrapper">
                     <lite-youtube videoid="${v}"></lite-youtube>                              
@@ -1392,7 +1392,7 @@ function populateStocks(data) {
       <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
     </svg>`
         var $listItem = $(`
-            <li class="list-group-item border-bottom py-4 mb-1 bg-light" style="cursor:pointer" id="${k}-stocks">
+            <li class="list-group-item border-bottom py-4 mb-1 bg-dark text-white " style="cursor:pointer" id="${k}-stocks">
                 <div class="small fw-bold">${companyName} (${nseScriptCode}) ${daychangeicon} ${details.dayChangePerc.toFixed(2)}%</div>                      
                 <div><p class="mb-4 small"><strong>Open</strong>: ${details.open}, <strong>High</strong>: ${details.high}, <strong>Low</strong>: ${details.low},<strong>Close</strong>: ${details.close}</p></div>
                 <div class="d-flex gap-2 w-100 justify-content-between">

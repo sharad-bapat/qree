@@ -1,5 +1,6 @@
 html, body{
-  background-color: #faf8f7 !important;   
+  background-color: #212529 !important;   
+  color: #fff !important;
 }
 .bg-light{
 background-color: #faf8f7 !important; 
@@ -40,7 +41,7 @@ background-color: #faf8f7 !important;
   z-index: 99;
   border: none;
   outline: none;
-  background-color: #faf8f7; 
+  background-color: #212529; 
   padding: 0px;
   color: #ff002b;
   cursor: pointer;     
@@ -74,16 +75,16 @@ figure{
   /* margin: 10px 0 20px 0 !important; */
 }
 figure:active{
-  filter: grayscale(100%);
+  filter: grayscale(50%);
 }
 figure:focus{
-  filter: grayscale(100%);
+  filter: grayscale(50%);
 }
 figure:focus-visible{
-  filter: grayscale(100%);
+  filter: grayscale(50%);
 }
 figure:hover {
-  filter: grayscale(100%);
+  filter: grayscale(50%);
 }
 figcaption{
   text-align: center;
@@ -92,11 +93,11 @@ figcaption{
 
 svg:hover, svg:active, svg:focus-visible{
   color: #000; 
-  filter: grayscale(100%) !important;
+  filter: grayscale(50%) !important;
 }
 .menuItems a{
   text-decoration: inherit;
-  color: inherit;
+  color: #fff;
   cursor: pointer;
 }
 
