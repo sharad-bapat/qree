@@ -43,8 +43,7 @@ function load() {
     // getHomeTopStoriesGoogle().then(data=>{console.log(data)});
     if (location.hash == "#homeSection") {
         loading();
-        getHomeTopStoriesGoogle().then(data=>{
-            console.log(data);
+        getHomeTopStoriesGoogle().then(data=>{            
             populateHomeTopStoriesfromGoogle(data);
         });
         

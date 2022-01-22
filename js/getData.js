@@ -1256,8 +1256,8 @@ function getHomeTopStoriesGoogle(){
                             let visualurl = value.visual ? value.visual.url : ``
                             let edgeCacheUrl = value.visual ? value.visual.edgeCacheUrl : ``
                             let alturl = value.originId.includes("news.google.com") ? a2b(value.originId.replace("https://news.google.com/__i/rss/rd/articles/","").replace("?oc=5","")).replace("Ò","").replace('"{','') : value.canonicalUrl
-                            console.log(value.originId)
-                            console.log("https:" + alturl.replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '').split('https:')[1])
+                            // console.log(value.originId)
+                            // console.log("https:" + alturl.replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '').split('https:')[1])
                             response.push({
                                 "title":value.title,
                                 "published":value.published,

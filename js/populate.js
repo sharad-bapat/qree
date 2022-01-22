@@ -1,3 +1,4 @@
+
 // Helper Functions
 function populateDetails(k) {
     v = getLocalStorage("TopNews")[k]
@@ -141,13 +142,14 @@ function populateHomeTopStoriesfromGoogle(data) {
     var $listItem = $(`<h4 class="mt-2 fw-bold text-main ms-2">Top Stories</h4>`);
     $("#qree").append($listItem);
     try {
+        var {hostname} =  new URL(data[0].alturl);
         let imgsrc0 = data[0].visual ? data[0].visual : data[0].alt_visual       
         var $listItem = $(`                    
             <li class="list-group-item border-bottom py-4 bg-light mb-1">   
                 <div class="card" style="width:100%;">
                     <img src="${imgsrc0}" class="card-img-top" alt="">
                     <div class="card-body">  
-                        <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.alturl}" class="text-yellow underline" target="_blank">${new URL(data[0].alturl)}</a></p>                  
+                        <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${data[0].alturl}" class="text-yellow underline" target="_blank">${hostname}</a></p>                  
                         <h5 class="mt-0 mb-0 fw-bold">${data[0].title}</h5>  
                         <details class="mt-2">
                             <summary>Related Stories</summary>
