@@ -71,6 +71,7 @@ iframe {
 figure{ 
   color: #ff002b;
   text-align: center;
+  /* margin: 10px 0 20px 0 !important; */
 }
 figure:active{
   filter: grayscale(100%);
@@ -83,6 +84,10 @@ figure:focus-visible{
 }
 figure:hover {
   filter: grayscale(100%);
+}
+figcaption{
+  text-align: center;
+  
 }
 
 svg:hover, svg:active, svg:focus-visible{
@@ -142,6 +147,57 @@ svg:hover, svg:active, svg:focus-visible{
 
 ::-webkit-scrollbar-track { 
   background-color: #eee; 
+}
+
+
+#myModal figure{
+  max-width: calc(100vw - 20px) !important;
+  height: auto !important;
+  object-fit: cover !important;
+  align-items: center;
+}
+
+#myModal img{
+  max-width: calc(100vw - 20px) !important;
+  height: auto !important;
+  object-fit: cover !important;
+  align-items: center;
+}
+
+#myModal div{
+  max-width: calc(100vw - 10px) !important; 
+}
+
+#myModal p{
+  max-width: calc(100vw - 10px) !important; 
+}
+
+#myModal video{
+  max-width: calc(100vw - 20px) !important;
+  height: auto !important;
+  object-fit: cover !important;
+  align-items: center;
+}
+
+#myModal iframe{
+  max-width: calc(100vw - 20px) !important;
+  height: auto !important;
+  object-fit: cover !important;
+  align-items: center;
+}
+
+#myModal .embed-youtube{
+  max-width: calc(100vw - 10px) !important;
+  height: auto !important;
+  object-fit: cover !important;
+  align-items: center;
+}
+
+#myModal .embed-youtube{
+  max-width: calc(100vw - 10px) !important;
+  height: auto !important;
+  object-fit: cover !important;
+  align-items: center;
 }
 
 

@@ -226,27 +226,20 @@ function getHomeTrendingNews() {
         } catch (err) { reject(err) }
     })
 }
-function getHomeTopStories(){
-    return new Promise((resolve, reject)=>{
-        try{
-            if(!getLocalStorage("HomeTopStories")){
-                urls = ["https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:bbc.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:foxnews.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:cnn.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:ndtv.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:scroll.in",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:dailymail.co.uk",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:zeenews.india.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:techradar.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:telegraph.co.uk",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:timesofindia.indiatimes.com",
-                        "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=1&query=sourcelang:eng%20domainis:thehindu.com",
-                        ]
-                async.mapLimit(urls, 11, async function(url){try{const response = await fetch(url);return response.json()}catch (err) {return {}}}, (err, results) => { response = normalizeGDELT(results); setLocalStorage("HomeTopStories",response, 15 * 60000);resolve(response)})
-            }else{
-                resolve(getLocalStorage("HomeTopStories"));
-            }
-        }catch(err){reject(err)}
+function getHomeTopStories() {
+    return new Promise((resolve, reject) => {
+        try {
+            urls = ["https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=hybridrel&format=json&maxrecords=15&query=sourcelang:eng%20sourcecountry:UK&timespan=1h",
+                "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=hybridrel&format=json&maxrecords=15&query=sourcelang:eng%20sourcecountry:India&timespan=1h",
+                "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=5&query=sourcelang:eng%20domainis:foxnews.com",
+                "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=5&query=sourcelang:eng%20domainis:cnn.com",
+                "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=5&query=sourcelang:eng%20domainis:forbes.com",
+                "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=5&query=sourcelang:eng%20domainis:yahoo.com",
+                "https://api.gdeltproject.org/api/v2/doc/doc?mode=artlist&sort=datedesc&format=json&maxrecords=5&query=sourcelang:eng%20domainis:thediplomat.com",
+            ]
+            async.mapLimit(urls, 11, async function (url) { try { const response = await fetch(url); return response.json() } catch (err) { return {} } }, (err, results) => { response = normalizeGDELT(results); resolve(response) })
+
+        } catch (err) { reject(err) }
     })
 }
 
@@ -1227,3 +1220,78 @@ function getStocks(){
         }catch(err){reject(err)}
     })
 }
+
+
+// Get Top Stories from Google RSS
+
+function getHomeTopStoriesGoogle(){
+    return new Promise((resolve, reject)=>{
+        try {
+            const start = Date.now()
+            urls = ["https://feedly.com/v3/streams/contents?streamId=feed%2Fhttps%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Den-IN%26gl%3DIN%26ceid%3DIN%3Aen&count=20&ranked=newest&similar=true&findUrlDuplicates=true&ct=feedly.desktop&cv=31.0.1494",
+                    "https://feedly.com/v3/streams/contents?streamId=feed%2Fhttps%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Den-GB%26gl%3DGB%26ceid%3DGB%3Aen&count=20&ranked=newest&similar=true&findUrlDuplicates=true&ct=feedly.desktop&cv=31.0.1494",
+                    "https://feedly.com/v3/streams/contents?streamId=feed%2Fhttps%3A%2F%2Fnews.google.com%2Frss%3Fhl%3Den-US%26gl%3DUS%26ceid%3DUS%3Aen&count=20&ranked=newest&similar=true&findUrlDuplicates=true&ct=feedly.desktop&cv=31.0.1494"
+                ]
+            async.mapLimit(urls, 3, async function (url) {
+                try {
+                    const response = await fetch("https://sbcors.herokuapp.com/" + url, {
+                        method: 'get',
+                        headers: { 'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36' }
+                    })
+                    return response.json();
+                } catch (err) {
+                    return {}
+                }
+
+            }, (err, results) => {
+                if (err) { console.log(err);  }
+                else {
+                    response = []
+                    const stop = Date.now()
+                    console.log(`Time Taken to get Top RSS = ${(stop - start) / 1000} seconds`);
+                    // console.log(results);
+                    $.each(results,function(k,v){
+                        $.each(v.items, function(index,value){
+                            let link = value.canonicalUrl ? value.canonicalUrl : ``
+                            let visualurl = value.visual ? value.visual.url : ``
+                            let edgeCacheUrl = value.visual ? value.visual.edgeCacheUrl : ``
+                            let alturl = value.originId.includes("news.google.com") ? a2b(value.originId.replace("https://news.google.com/__i/rss/rd/articles/","").replace("?oc=5","")).replace("Ò","").replace('"{','') : value.canonicalUrl
+                            console.log(value.originId)
+                            console.log("https:" + alturl.replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '').split('https:')[1])
+                            response.push({
+                                "title":value.title,
+                                "published":value.published,
+                                "summary": value.summary.content,
+                                "visual": visualurl,
+                                "alt_visual": edgeCacheUrl,
+                                "link": link,
+                                "alturl":"https:" + alturl.replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '').split('https:')[1]
+                            })
+                        })
+                    }) 
+                    response = response.sort(function (a, b) {
+                        return b.published - a.published;
+                    });                   
+                    resolve(response);
+                };
+            })
+
+        } catch (err) { reject(err) }
+    })
+}
+
+
+function a2b(a) {
+    var b, c, d, e = {}, f = 0, g = 0, h = "", i = String.fromCharCode, j = a.length;
+    for (b = 0; 64 > b; b++) e["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)] = b;
+    for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; ) ((d = 255 & f >>> (g -= 8)) || j - 2 > c) && (h += i(d));
+    return h;
+  }
+
+  function b2a(a) {
+    var c, d, e, f, g, h, i, j, o, b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", k = 0, l = 0, m = "", n = [];
+    if (!a) return a;
+    do c = a.charCodeAt(k++), d = a.charCodeAt(k++), e = a.charCodeAt(k++), j = c << 16 | d << 8 | e, 
+    f = 63 & j >> 18, g = 63 & j >> 12, h = 63 & j >> 6, i = 63 & j, n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i); while (k < a.length);
+    return m = n.join(""), o = a.length % 3, (o ? m.slice(0, o - 3) :m) + "===".slice(o || 3);
+  }

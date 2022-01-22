@@ -110,7 +110,7 @@ function populateHomeTopNews(data) {
                     </div>
                 </div>
         </li>
-        `);
+        `);        
         $("#qree").append($listItem);
         $.each(data.slice(3), function (k, v) {
             let imgsrc = v.thumbnail ? v.thumbnail : ``
@@ -121,15 +121,75 @@ function populateHomeTopNews(data) {
                         <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6> 
                         <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.link}" class="text-yellow underline" target="_blank">${v.source}</a></p> 
                     </div>
-                    <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 sqimg rounded" onerror='imgError(this)' />
+                    <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 sqimg rounded" onerror='imgErrorloadicon(this,"${v.source}")' />
                 </div>
             </li>
             `);
+            $listItem.on("click", function (e) {
+                $("#modalTitle").html("");
+                $("#modalBody").html("");
+                getArticleExtract(v.link);
+            });
             $("#qree").append($listItem);
         })
     } catch (err) {
 
     }
+}
+function populateHomeTopStoriesfromGoogle(data) {    
+    $("#qree").html(``);
+    var $listItem = $(`<h4 class="mt-2 fw-bold text-main ms-2">Top Stories</h4>`);
+    $("#qree").append($listItem);
+    try {
+        let imgsrc0 = data[0].visual ? data[0].visual : data[0].alt_visual       
+        var $listItem = $(`                    
+            <li class="list-group-item border-bottom py-4 bg-light mb-1">   
+                <div class="card" style="width:100%;">
+                    <img src="${imgsrc0}" class="card-img-top" alt="">
+                    <div class="card-body">  
+                        <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.alturl}" class="text-yellow underline" target="_blank">${new URL(data[0].alturl)}</a></p>                  
+                        <h5 class="mt-0 mb-0 fw-bold">${data[0].title}</h5>  
+                        <details class="mt-2">
+                            <summary>Related Stories</summary>
+                            ${data[0].summary}
+                        </details>                                         
+                    </div>          
+                </div>                 
+        </li>
+        `);        
+        $("#qree").append($listItem);        
+        $.each(data.slice(1), function (k, v) {
+            let imgsrc = v.visual ? v.visual : v.alt_visual
+            var { hostname } = new URL(v.alturl)
+            var $listItem = $(`                    
+            <li class="list-group-item border-bottom py-4 bg-light mb-1">                                        
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div>       
+                        <p class="mb-0 mt-0 small text-yellow fw-bold"><a href="${v.alturl}" class="text-yellow underline" target="_blank">${hostname}</a></p>                         
+                        <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6>
+                    </div>
+                    <img src="${imgsrc}" alt="" width="96" height="96" class="flex-shrink-0 sqimg rounded" onerror='imgErrorloadicon(this,"${hostname}")' />
+                </div>
+                <details class="mt-2">
+                <summary>Related Stories</summary>
+                    <div class="mt-2">${v.summary}</div>
+                </details>
+            </li>
+            `);
+            // $listItem.on("click", function (e) {
+            //     $("#modalTitle").html("");
+            //     $("#modalBody").html("");
+            //     getArticleExtract(v.link);
+            // });
+            $("#qree").append($listItem);
+        })
+    } catch (err) {
+    }
+    // $('li:contains("View Full")').remove();
+    // $('li > a:contains("View Full")').remove();
+    $('li > strong > a:contains("View Full")').remove();
+    $('li > strong').remove();
+    $('ol li:last-child').remove();
 }
 function populateHomeTrendingNews(results) {
     arr = []
@@ -612,6 +672,11 @@ function populateTrendingNews(data) {
         </li>
         `);        
         $("#qree").append($listItem);
+         $listItem.on("click", function (e) {
+                $("#modalTitle").html("");
+                $("#modalBody").html("");
+                getArticleExtract(v.link);
+            });
         count++;
     });
 }
@@ -1341,3 +1406,165 @@ function populateStocks(data) {
         $("#qree").append($listItem);
     });
 }
+
+function getArticleExtract(url) {    
+    async.tryEach([
+        (next) => {
+            fetchURL(`https://api-panda.com/v2/feeds/story/full?url=${url}`).then(data => {
+                if (data.success) {
+                    // console.clear()
+                    data = data.data;
+                    // console.log(data.data.data.title);
+                    let title = data.data.title ? data.data.title : ``;
+                    let content = data.data.html ? data.data.html : ``;
+                    let pageUrl = data.data.pageUrl ? data.data.pageUrl : ``;
+                    let icon = data.data.icon ? data.data.icon : ``;
+                    let author = data.data.author ? data.data.author : ``;
+                    let authorUrl = data.data.authorUrl ? data.data.authorUrl : ``;
+                    let siteName = data.data.siteName ? data.data.siteName : ``;
+                    let date = data.data.date ? new Date(data.data.date).toLocaleString("en-GB") : ``;
+                    $('#myModal').on('shown.bs.modal', function(){                    
+                        $("#modalTitle").html(``);
+                        $("#modalBody").html(``);
+                        $("#modalTitle").html(`${title}`);
+                        $("#modalBody").html(`<img src ="${data.lead_image_url} alt="" width='100%' height="auto" style="object-fit:cover" onerror='imgError(this)'/>`);                       
+                        $("#modalBody").append(`<p class="small">${content}<p>`);
+                        $("#modalBody").append(`<p class="small d-flex-justify-content-center">Extract Via: UsePanda.com<p>`);
+                        $('#myModal img').each(function () {
+                            $(this).removeAttr('style');
+                            $(this).removeAttr('class');
+                            $(this).removeAttr('width');
+                            $(this).removeAttr('height');
+                        });
+                    })
+                    $('#myModal').modal('show');                  
+                } else {
+                    console.log(`Pandas did not work`);
+                    return next(new Error('Cannot get Data'))
+                }
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
+            })
+        },
+        (next) => {
+            fetchURL(`https://api.outline.com/v3/parse_article?source_url=${url}`).then(data => {
+                if (data.success) {
+                    data = data.data;
+                    if (data.data.site_name == "Outline") {
+                        return next(new Error('Cannot get Data'))
+                    } else {
+                        // console.clear()
+                        let title = data.data.title ? data.data.title : ``;
+                        let content = data.data.html ? data.data.html : ``;
+                        let pageUrl = data.data.article_url ? data.data.article_url : ``;
+                        let icon = data.data.icon ? data.data.icon : ``;
+                        let author = data.data.author ? data.data.author : ``;
+                        let siteName = data.data.site_name ? data.data.site_name : ``;
+                        let date = data.data.date ? data.data.date : ``;                       
+                        $('#myModal').on('shown.bs.modal', function(){  
+                            $("#modalTitle").html(``);
+                            $("#modalBody").html(``);                  
+                            $("#modalTitle").html(`${title}`);
+                            $("#modalBody").html(`<img src ="${data.lead_image_url} alt="" width='100%' height="auto" style="object-fit:cover" onerror='imgError(this)'/>`);                            
+                            $("#modalBody").append(`<p class="small">${content}<p>`);
+                            $("#modalBody").append(`<p class="small d-flex-justify-content-center">Extract Via: Outline.com<p>`);
+                            $('#myModal img').each(function () {
+                                $(this).removeAttr('style');
+                                $(this).removeAttr('class');
+                                $(this).removeAttr('width');
+                                $(this).removeAttr('height');
+                            });
+                        })
+                        $('#myModal').modal('show');
+                        
+                    }
+
+                } else {
+                    console.log(`Outline did not work`);
+                    return next(new Error('Cannot get Data'))
+                }
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
+            })
+        },        
+        (next) => {
+            Parse(`${url}`).then(data => {
+                if (data.title) {
+                    console.clear()
+                    $("#modalTitle").html(``);
+                    $("#modalBody").html(``);
+                    $('#myModal').on('shown.bs.modal', function(){      
+                        $("#modalTitle").html(``);
+                        $("#modalBody").html(``);                    
+                        $("#modalTitle").html(`${data.title}`);                       
+                        $("#modalBody").html(`<h1>${data.title}</h1>`);                        
+                        $("#modalBody").html(`<img src ="${data.lead_image_url} alt="" width='100%' height="auto" style="object-fit:cover" onerror='imgError(this)'/>`);
+                        $("#modalBody").append(`<p class="small">${data.content}<p>`);
+                        $("#modalBody").append(`<p class="small d-flex-justify-content-center">Extract Via: Normal Parse<p>`);
+                        $('#myModal img').each(function () {
+                            $(this).removeAttr('style');
+                            $(this).removeAttr('class');
+                            $(this).removeAttr('width');
+                            $(this).removeAttr('height');
+                        });
+                    })
+                    $('#myModal').modal('show');
+                } else {
+                    console.log(`Simple parsing did not work`);
+                    return next(new Error('Cannot get Data'))
+                }
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
+            })
+        },
+        (next) => {
+            Parse(`https://sbcors.herokuapp.com/${url}`).then(data => {
+                if (data.title) {
+                    console.clear()                    
+                    $('#myModal').on('shown.bs.modal', function(){  
+                        $("#modalTitle").html(``);
+                        $("#modalBody").html(``);                  
+                        $("#modalTitle").html(`${data.title}`);
+                        $("#modalBody").html(`<img src ="${data.lead_image_url} alt="" width='100%' height="auto" style="object-fit:cover" onerror='imgError(this)'/>`);                                                
+                        $("#modalBody").append(`<p class="small">${data.content}<p>`);
+                        $("#modalBody").append(`<p class="small d-flex-justify-content-center">Extract Via: Proxy server<p>`);
+                        $('#myModal img').each(function () {
+                            $(this).removeAttr('style');
+                            $(this).removeAttr('class');
+                            $(this).removeAttr('width');
+                            $(this).removeAttr('height');
+                        });
+                    })
+                    $('#myModal').modal('show');
+                    
+                } else {
+                    console.log(`CORS did not work`);
+                    return next(new Error('Cannot get Data'))
+                }
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
+            })
+        },
+        (next) => {
+            fetchURL(`https://txtify.it/${url}`).then(data => {
+                    // console.clear()
+                    $("#modalTitle").html(``);
+                    $("#modalBody").html(``);
+                    $('#myModal').on('shown.bs.modal', function(){
+                        $("#modalBody").append(data.response);
+                        $("#modalBody").append(`<p class="small d-flex-justify-content-center">Extract Via: txtify.it<p>`);                        
+                    })
+                    $('#myModal').modal('show');   
+            }).catch(err => {
+                console.log(err);
+                return next(new Error('Cannot get Data'))
+            })
+        },
+    ])
+
+}
+

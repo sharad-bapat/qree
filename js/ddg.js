@@ -39846,8 +39846,9 @@ async function search(query, options, needleOptions) {
         msvrtexp: 'b'
     };
     const response = await (0, needle_1.default)('get', `https://sbcors.herokuapp.com/https://duckduckgo.com/d.js?${(0, util_1.queryString)(queryObject)}`, needleOptions);
-    if (response.body.includes('DDG.deep.is506'))
-        throw new Error('A server error occurred!');
+    // if (response.body.includes('DDG.deep.is506'))
+    //     throw new Error('A server error occurred!');
+    console.log(response);
     const searchResults = JSON.parse(SEARCH_REGEX.exec(response.body)[1].replace(/\t/g, '    '));
     // check for no results
     if (searchResults.length === 1 && !('n' in searchResults[0])) {
