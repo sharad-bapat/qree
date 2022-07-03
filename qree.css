@@ -151,7 +151,8 @@ figcaption {
 .newslink {
   color: #000;
   text-decoration: none !important;
-  font-size: 1.05rem;
+  font-size: 1.05rem; 
+
 }
 
 .newslink:hover, .newslink:active {
@@ -161,5 +162,22 @@ figcaption {
 }
 
 .contentSnippet img{
+  display: none !important;
+}
+
+.contentSnippet figure{
+  display: none !important;
+}
+
+.wp-post-image
+{
+  display: none !important;
+}
+
+.size-full, .twitter-tweet, .aligncenter {
+  display: none !important;
+}
+
+iframe{
   display: none !important;
 }

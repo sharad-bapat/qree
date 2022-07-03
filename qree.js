@@ -44,17 +44,17 @@ function load() {
     else if(location.hash=="#RealTimeTrends"){
         getRealTimeTrends().then(data => { populateRealTimeTrends(data); });
     }
-    else if (location.hash == "#india") {
-        getIndiaData().then((data => { populate(data); }));
+    else if (location.hash == "#trendingIndia") {
+        getIndiaNewsRSS().then((data => { populateRSS(data); }));
     }
-    else if (location.hash == "#business") {
-        getBusinessData().then((data => { populate(data); }));
+    else if (location.hash == "#trendingBusinessNews") {
+        getBusinessNewsRSS().then((data => { populateRSS(data); }));
     }
     else if (location.hash == "#bollywood") {
-        getBollywoodData().then((data => { populate(data); }));
+        //getBollywoodNewsRSS().then((data => { populateRSS(data); }));
     }
-    else if (location.hash == "#cricket") {
-        getCricketData().then((data => { populate(data); }));
+    else if (location.hash == "#techNews") {
+        getTechNews().then((data => { populateRSS(data); }));
     }
     else if (location.hash == "#other") {
         getOtherData().then((data => { populate(data); }));
@@ -178,6 +178,7 @@ function getWorldNewsRSS() {
                    
                     `https://feeds.npr.org/1001/rss.xml`,
                     `http://feeds.bbci.co.uk/news/world/rss.xml`,
+                    `https://feeds.a.dj.com/rss/RSSWorldNews.xml`,
                     `http://rss.cnn.com/rss/edition_world.rss`,
                     `https://rss.nytimes.com/services/xml/rss/nyt/World.xml`,
                     `http://www.aljazeera.com/xml/rss/all.xml`,
@@ -215,7 +216,7 @@ function getWorldNewsRSS() {
 function populateRSS(data) {
     console.log(data);        
     $("#qree").html("");
-    $.each(data, function (i, j) {
+    $.each(data, function (i, j) {       
         var { hostname } = data[i].items[0] ? new URL(data[i].items[0].link) : ``;
         let description = data[i].feed_description ? data[i].feed_description : ``
         if(hostname){
@@ -235,12 +236,12 @@ function populateRSS(data) {
             `);
         }        
         if(data[i].items.length>0){
-            $.each(data[i].items, function (k, v) {
+            $.each(data[i].items.slice(0,5), function (k, v) {
                 try {
                     let content_snippet = v.content ? v.content : ""
                     var $listItem = $(`<li class="py-3 list-group-item newslink" style="cursor:pointer">
-                        <u><strong>${v.title}</strong></u>
-                        <p class="small contentSnippet">${content_snippet}</p>
+                        <u><h6 class="fw-bold">${v.title}</h6></u>
+                        <!--<p class="smaller contentSnippet">${content_snippet}</p>-->
                     </li>`);
                     $listItem.on("click", function (e) {
                         console.log(v.link);
@@ -310,7 +311,7 @@ function populateTrendingNews(data) {
                     ${imgsrc}
                     <div>  
                         <p class="mb-0 smaller">${v.source}</p>
-                        <u><strong><span class="mb-0 mt-0">${v.title}</span></strong></u>
+                        <u><h6 class="fw-bold mb-0 mt-0">${v.title}</h6></u>                        
                     </div>                  
                 </div>  
         </li>
@@ -334,8 +335,8 @@ function getGoogleSearchTrends() {
                 ]
                 async.mapLimit(urls, 1, async function (url) {
                     try {
-                        // const response = await fetch("https://sbcors.herokuapp.com/" + url)
-                        const response = await fetch(url)
+                        const response = await fetch("https://sbcors.herokuapp.com/" + url)
+                        //const response = await fetch(url)
                         return response.text()
                     } catch (err) {
                         return ")]}',"
@@ -389,7 +390,7 @@ function populateGoogleSearchTrends(data) {
                 <div class="d-flex gap-2 w-100 justify-content-start">
                     ${imgsrc}
                     <div>  
-                        <p class="mb-0 mt-0 fw-bold small">${v.title.query}</p>
+                        <h6 class="mb-0 mt-0 fw-bold">${v.title.query}</h6>
                         <p class="mt-0 mb-0 smaller">${v.articles[0].snippet}</p>
                     </div>                  
                 </div>  
@@ -664,18 +665,18 @@ function getRealTimeTrends(){
 function populateRealTimeTrends(data) {    
     $("#qree").html(``);
     $.each(data, function (k, v) {
-        let imgsrc = v.image.imgUrl ? `<img src="http:${v.image.imgUrl}" alt="" width="56" height="6" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``
+        let imgsrc = v.image.imgUrl ? `<img src="http:${v.image.imgUrl}" alt="" width="56" height="56" class="rounded sqimg d-flex justify-content-end" onerror='imgError(this)' />` : ``
         var $listItem = $(`
         <li class="list-group-item py-4 mb-0" style="cursor:pointer"> 
                 <div class="d-flex gap-2 w-100 justify-content-start">
                     ${imgsrc}
-                    <div>                                                                              
-                        ${v.title}                  
+                    <div>    
+                        <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6>
                     </div>
                 </div> 
                 <div>
                     <details>
-                        <summary>Explore</summary>
+                        <summary class="text-main">Explore</summary>
                         <ul class="list-group list-group-flush mt-3 ms-3" id="${k}googleTrends">
                         </ul> 
                     </details>
@@ -697,72 +698,163 @@ function populateRealTimeTrends(data) {
     })
 }
 
-
-function getIndiaData() {
-    loading();
-    var n = 2;
+//India News Trends
+function getIndiaNewsRSS() {
     return new Promise((resolve, reject) => {
-        try {
-            if (!getLocalStorage("IndiaData")) {
-                var urls = [
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Ffeeds.feedburner.com%2FNDTV-LatestNews?numRecentEntries=5&ck=1656168883401&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Fwww.thehindu.com%2Fnews%2Fnational%2F%3Fservice%3Drss?numRecentEntries=5&ck=1656168933637&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Feconomictimes.indiatimes.com%2Frssfeedsdefault.cms?numRecentEntries=5&ck=1656168933639&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Ffeeds.feedburner.com%2Fscroll_in.rss?numRecentEntries=5&ck=1656168933640&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Ftimesofindia.indiatimes.com%2Frssfeeds%2F-2128936835.cms?numRecentEntries=5&ck=1656168933643&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Findianexpress.com%2Fsection%2Findia%2Ffeed%2F?numRecentEntries=5&ck=1656169019513&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Fwww.dnaindia.com%2Fsyndication%2Frss%2CcatID-0.xml?numRecentEntries=5&ck=1656169022914&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Fwww.zeenews.com%2Frss%2Findia-national-news.xml?numRecentEntries=5&ck=1656169022919&ct=feedly.desktop&cv=31.0.1621`,
-                    `https://feedly.com/v3/feeds/feed%2Fhttp%3A%2F%2Fwww.thequint.com%2Ffeed?numRecentEntries=5&ck=1656169019514&ct=feedly.desktop&cv=31.0.1621`,
-
+        if (!getLocalStorage("IndiaNews")) {
+            try {
+               
+                var urls = [                                      
+                    `http://feeds.feedburner.com/NDTV-LatestNews`,
+                    `https://www.indiatoday.in/rss/1206578`,
+                    `https://indianexpress.com/feed/`,
+                    `https://www.thehindu.com/news/national/?service=rss`,
+                    `http://www.news18.com/rss/india.xml`,
+                    `https://www.dnaindia.com/feeds/india.xml`,
+                    `https://www.deccanchronicle.com/rss_feed/`,
+                    `http://feeds.feedburner.com/ScrollinArticles.rss`,
+                    `https://prod-qt-images.s3.amazonaws.com/production/thequint/feed.xml`,
+                    `https://telanganatoday.com/feed`,
+                    `https://cms.qz.com/feed/edition/india/`,                    
                 ]
                 async.map(urls, async function (url) {
                     try {
-                        const response = await fetch(`https://sbcors.herokuapp.com/${url}`)
-                        return response.json()
+                        const response = await rss(`https://sbcors.herokuapp.com/${url}`)                        
+                        return response
                     } catch (err) {
+                        console.log(err);
                         return {}
                     }
-
                 }, (err, results) => {
                     if (err) { console.log(err); } else {
-                        var arr = [];
-                        for (index in results) {
-                            $.each(results[index].recentEntries, function (k, v) {
-                                arr.push({
-                                    "link": v.canonicalUrl,
-                                    "title": v.title,
-                                    "published": v.published
-                                })
-                            });
-                        }
-                        var arrr = arr.sort(function (a, b) {
-                            return b.published - a.published;
-                        });
-                        setLocalStorage("IndiaData", arrr, 30 * 60000);
-                        resolve(arrr);
+                        response = normalizeRSS(results)
+                        setLocalStorage("IndiaNews", response, 60 * 60000);
+                        resolve(response);
                     }
                 })
-            } else {
-                resolve(getLocalStorage("IndiaData"));
-            }
-
-        } catch (err) { reject(err) }
-    })
-}
-function populateIndiaData(data) {
-    $(".indiaItems").html("");
-    $.each(data, function (k, v) {
-        var { hostname } = new URL(v.link)
-        var $listItem = $(`                    
-        <li class="p-2 list-group-item mb-1"> 
-                <span class="mb-0 mt-0">${v.title} - <a href="${v.link}" class="links" target="_blank">${hostname}</a></span>                   
-        </li>
-        `);
-        $(".indiaItems").append($listItem);
+    
+            } catch (err) { reject(err) }
+        }
+        else{
+            resolve(getLocalStorage("IndiaNews"))
+        }
+        
     })
 }
 
+//Business News Trends
+function getBusinessNewsRSS() {
+    return new Promise((resolve, reject) => {
+        if (!getLocalStorage("BusinessNews")) {
+            try {
+               
+                var urls = [                                      
+                    `https://www.entrepreneur.com/latest.rss`,                    
+                    `https://www.inc.com/rss/`,                                    
+                    `http://venturebeat.com/feed/`,    
+                    `https://feeds.a.dj.com/rss/WSJcomUSBusiness.xml`,
+                ]
+                async.map(urls, async function (url) {
+                    try {
+                        const response = await rss(`https://sbcors.herokuapp.com/${url}`)                        
+                        return response
+                    } catch (err) {
+                        console.log(err);
+                        return {}
+                    }
+                }, (err, results) => {
+                    if (err) { console.log(err); } else {
+                        response = normalizeRSS(results)
+                        setLocalStorage("BusinessNews", response, 60 * 60000);
+                        resolve(response);
+                    }
+                })
+    
+            } catch (err) { reject(err) }
+        }
+        else{
+            resolve(getLocalStorage("BusinessNews"))
+        }
+        
+    })
+}
+
+//Bollywood News Trends
+function getBollywoodNewsRSS() {
+    return new Promise((resolve, reject) => {
+        if (!getLocalStorage("BollywoodNews")) {
+            try {
+               
+                var urls = [        
+                    `http://feeds.feedburner.com/missmalini`,
+                    `http://www.pinkvilla.com/rss.xml`,
+                    `http://www.rediff.com/rss/moviesrss.xml`,
+                    `http://www.koimoi.com/feed/`,
+                ]
+                async.map(urls, async function (url) {
+                    try {
+                        const response = await rss(`https://sbcors.herokuapp.com/${url}`)                        
+                        return response
+                    } catch (err) {
+                        console.log(err);
+                        return {}
+                    }
+                }, (err, results) => {
+                    if (err) { console.log(err); } else {
+                        response = normalizeRSS(results)
+                        setLocalStorage("BollywoodNews", response, 60 * 60000);
+                        resolve(response);
+                    }
+                })
+    
+            } catch (err) { reject(err) }
+        }
+        else{
+            resolve(getLocalStorage("BollywoodNews"))
+        }
+        
+    })
+}
+
+//Bollywood News Trends
+function getTechNews() {
+    return new Promise((resolve, reject) => {
+        if (!getLocalStorage("TechNews")) {
+            try {
+               
+                var urls = [        
+                    `https://www.techmeme.com/feed.xml?x=1`,
+                    `https://www.wired.com/feed/rss`,
+                    `https://techcrunch.com/feed/`,
+                    `https://www.technologyreview.com/topnews.rss`,
+                    `http://www.theverge.com/rss/frontpage`,
+                    `http://feeds.feedburner.com/venturebeat/SZYF`,
+                    `http://feeds.arstechnica.com/arstechnica/technology-lab`,
+                ]
+                async.map(urls, async function (url) {
+                    try {
+                        const response = await rss(`https://sbcors.herokuapp.com/${url}`)                        
+                        return response
+                    } catch (err) {
+                        console.log(err);
+                        return {}
+                    }
+                }, (err, results) => {
+                    if (err) { console.log(err); } else {
+                        response = normalizeRSS(results)
+                        setLocalStorage("TechNews", response, 60 * 60000);
+                        resolve(response);
+                    }
+                })
+    
+            } catch (err) { reject(err) }
+        }
+        else{
+            resolve(getLocalStorage("TechNews"))
+        }
+        
+    })
+}
 
 function on(url) {
     getArticleExtract(url);
