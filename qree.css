@@ -1,0 +1,165 @@
+.color-main {
+  color: #ef4056;
+}
+
+.text-main {
+  color: #ef4056;
+}
+
+.scroll {
+  max-height: calc(100vh - 200px);
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #ef4056 #fff;
+  overflow-x: scroll;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+  width: 5px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ef4056;
+  border-radius: 10px;
+  border: 2px solid #ef4056;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ef4056;
+}
+
+
+.links {
+  color: #ef4056;
+}
+
+.links:hover,
+.links:active {
+  color: #ec1c36;
+
+}
+
+li:nth-child(even) {
+  background: #e9ecef;
+}
+
+#overlay {
+  position: fixed;
+  /* Sit on top of the page content */
+  display: none;
+  /* Hidden by default */
+  width: 100%;
+  /* Full width (cover the whole page) */
+  height: 100%;
+  /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Black background with opacity */
+  z-index: 2;
+  /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer;
+  /* Add a pointer on hover */
+  color: #000;
+  overflow-y: scroll !important;
+}
+
+.wpContent {
+  max-width: 900px !important;
+  cursor: default !important;
+  position: relative !important;
+  border: 1px solid !important;
+  margin: auto !important;
+  background-color: #fff !important;
+  color: #000 !important;
+  font-size: 0.9rem;
+}
+
+#wpContent img {
+  object-fit: cover;
+  max-width: 95%;
+  position: relative;
+  margin: auto;
+}
+
+#gotop {
+  display: none;
+  position: fixed;
+  bottom: 40px;
+  right: calc(100vw - 90%);
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: #fff;
+  padding: 0px;
+  color: #ec1c36;
+  cursor: pointer;
+}
+
+.card ul {
+  padding-left: 0rem !important;
+}
+
+.menuItems a {
+  text-decoration: inherit;
+  color: #ec1c36;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+figure {
+  color: #ec1c36;
+  text-align: center;
+  /* margin: 10px 0 20px 0 !important; */
+}
+
+figure:active {
+  filter: grayscale(50%);
+}
+
+figure:focus {
+  filter: grayscale(50%);
+}
+
+figure:focus-visible {
+  filter: grayscale(50%);
+}
+
+figure:hover {
+  filter: grayscale(50%);
+}
+
+figcaption {
+  text-align: center;
+
+}
+
+.smaller{
+  font-size: 0.8rem;
+}
+
+.newslink {
+  color: #000;
+  text-decoration: none !important;
+  font-size: 1.05rem;
+}
+
+.newslink:hover, .newslink:active {
+  color: #ec1c36;
+  font-size: 1.05rem;
+  text-decoration: underline !important;
+}
+
+.contentSnippet img{
+  display: none !important;
+}
