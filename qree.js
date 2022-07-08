@@ -226,7 +226,7 @@ function populateRSS(data) {
                     <div class="d-flex gap-2 w-100 justify-content-start">               
                         <img src="https://icon.horse/icon/${hostname.replace("www.", "")}" alt="${hostname}" width="56" height="56" class="flex-shrink-0 rounded" />
                         <div class="border-bottom">                               
-                            <h6 class="mb-0 mt-0 fw-bold">${data[i].feed_title}</h6> 
+                            <h6 class="small mb-0 mt-0 fw-bold">${data[i].feed_title}</h6> 
                             <p class="mt-0 smaller">${description}</p> 
                         </div>                
                     </div>
@@ -240,7 +240,7 @@ function populateRSS(data) {
                 try {
                     let content_snippet = v.content ? v.content : ""
                     var $listItem = $(`<li class="py-3 list-group-item newslink" style="cursor:pointer">
-                        <u><h6 class="fw-bold">${v.title}</h6></u>
+                        <h6 class="small fw-bold">${v.title}</h6>
                         <!--<p class="smaller contentSnippet">${content_snippet}</p>-->
                     </li>`);
                     $listItem.on("click", function (e) {
@@ -311,7 +311,7 @@ function populateTrendingNews(data) {
                     ${imgsrc}
                     <div>  
                         <p class="mb-0 smaller">${v.source}</p>
-                        <u><h6 class="fw-bold mb-0 mt-0">${v.title}</h6></u>                        
+                        <h6 class="small fw-bold mb-0 mt-0">${v.title}</h6>                        
                     </div>                  
                 </div>  
         </li>
@@ -390,7 +390,7 @@ function populateGoogleSearchTrends(data) {
                 <div class="d-flex gap-2 w-100 justify-content-start">
                     ${imgsrc}
                     <div>  
-                        <h6 class="mb-0 mt-0 fw-bold">${v.title.query}</h6>
+                        <h6 class="small mb-0 mt-0 fw-bold">${v.title.query}</h6>
                         <p class="mt-0 mb-0 smaller">${v.articles[0].snippet}</p>
                     </div>                  
                 </div>  
@@ -671,7 +671,7 @@ function populateRealTimeTrends(data) {
                 <div class="d-flex gap-2 w-100 justify-content-start">
                     ${imgsrc}
                     <div>    
-                        <h6 class="mb-0 mt-0 fw-bold">${v.title}</h6>
+                        <h6 class="small mb-0 mt-0 fw-bold">${v.title}</h6>
                     </div>
                 </div> 
                 <div>
@@ -916,7 +916,7 @@ function populateGDELT(data) {
                     <div class="d-flex gap-2 w-100 justify-content-start">               
                         <img src="https://icon.horse/icon/${hostname.replace("www.", "")}" alt="${hostname}" width="28" height="28" class="flex-shrink-0 rounded" />
                         <div class="border-bottom">                               
-                            <h6 class="mb-0 mt-0 fw-bold" style="overflow:hidden;text-overflow: ellipsis; max-width:calc(100vw - 90px) !important;">${hostname}</h6>                         
+                            <h6 class="small mb-0 mt-0 fw-bold" style="overflow:hidden;text-overflow: ellipsis; max-width:calc(100vw - 90px) !important;">${hostname}</h6>                         
                         </div>                
                     </div>
                     <ul class="newsItems${hostname.replace("www.", "").replaceAll(".", "")} mt-2 list-group list-group-flush"></ul>
